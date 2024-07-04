@@ -3,6 +3,7 @@ package com.accountmanagement.repositories.product;
 
 import com.accountmanagement.database.DbConnection;
 import com.accountmanagement.models.Product;
+import com.accountmanagement.utils.AlertMaker;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -41,7 +42,8 @@ public class ProductSqliteRepository implements ProductRepository{
             
             
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
+            e.printStackTrace();
+            AlertMaker.showErrorALert(e.getMessage());
         }
         
         return false;
@@ -71,7 +73,8 @@ public class ProductSqliteRepository implements ProductRepository{
                 return true;
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
+            e.printStackTrace();
+            AlertMaker.showErrorALert(e.getMessage());
         }
         
         return false;
@@ -95,7 +98,7 @@ public class ProductSqliteRepository implements ProductRepository{
             }
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e);
+            AlertMaker.showErrorALert(e.getMessage());
         }
         
         return false;
@@ -131,7 +134,8 @@ public class ProductSqliteRepository implements ProductRepository{
                 list.add(product);
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e.getMessage(), "خطأ", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+            AlertMaker.showErrorALert(e.getMessage());
         }
         
         
@@ -168,6 +172,7 @@ public class ProductSqliteRepository implements ProductRepository{
             }
         } catch (Exception e) {
             e.printStackTrace();
+            AlertMaker.showErrorALert(e.getMessage());
         }
         
         

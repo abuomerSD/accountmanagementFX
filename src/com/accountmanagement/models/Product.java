@@ -87,5 +87,9 @@ public class Product {
         this.subscribtionValue = subscribtionValue;
     }
     
+    public static ProductBuilder builder() {
+        return new ProductBuilder();
+    }
+    
     
 }

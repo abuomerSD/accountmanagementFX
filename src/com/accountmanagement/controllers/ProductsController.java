@@ -1,19 +1,46 @@
 
 package com.accountmanagement.controllers;
 
+import com.accountmanagement.models.Product;
+import com.accountmanagement.repositories.product.ProductSqliteRepository;
+import com.accountmanagement.utils.AlertMaker;
+import com.accountmanagement.utils.DateFormater;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.List;
 import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 
 public class ProductsController implements Initializable {
+    
+    
+//    private final ProductSqliteRepository productRepo;
+    ProductSqliteRepository productRepo = new ProductSqliteRepository();
+    @FXML
+    private TableColumn<Product, String> colBuyerName;
+    @FXML
+    private TableColumn<Product, String> colPhone;
+    
+//    public ProductsController(ProductSqliteRepository productRepo) {
+////        this.productRepo = productRepo;
+//    }
 
     @FXML
     private TextField txtSerial;
@@ -34,66 +61,293 @@ public class ProductsController implements Initializable {
     @FXML
     private TextField txtBNSearch;
     @FXML
-    private TableView<?> tbProducts;
+    private TableView<Product> tbProducts;
     @FXML
     private TextField txtSerialSearchPL;
     @FXML
     private TextField txtBNSearchPL;
     @FXML
-    private TableView<?> tbProductsPL;
+    private TableView<Product> tbProductsPL;
     @FXML
     private Label lbStatus;
     @FXML
-    private TableColumn<?, ?> colId;
+    private TableColumn<Product, Integer> colId;
     @FXML
-    private TableColumn<?, ?> colSerial;
+    private TableColumn<Product, String> colSerial;
+    private TableColumn<Product, String> colByerName;
     @FXML
-    private TableColumn<?, ?> colByerName;
+    private TableColumn<Product, String> colEmail;
     @FXML
-    private TableColumn<?, ?> volPhone;
+    private TableColumn<Product, String> colPassword;
     @FXML
-    private TableColumn<?, ?> colEmail;
+    private TableColumn<Product, String> colSubsDate;
     @FXML
-    private TableColumn<?, ?> colPassword;
+    private TableColumn<Product, Double> colSubsValue;
     @FXML
-    private TableColumn<?, ?> colSubsDate;
+    private TableColumn<Product, Integer> colIdPL;
     @FXML
-    private TableColumn<?, ?> colSubsValue;
+    private TableColumn<Product, String> colSerialPL;
     @FXML
-    private TableColumn<?, ?> coldPL;
+    private TableColumn<Product, String> colBuyerNamePL;
     @FXML
-    private TableColumn<?, ?> colSerialPL;
+    private TableColumn<Product, String> colPhonePL;
     @FXML
-    private TableColumn<?, ?> colBuyerNamePL;
+    private TableColumn<Product, String> colEmailPL;
     @FXML
-    private TableColumn<?, ?> colPhonePL;
+    private TableColumn<Product, String> colPasswordPL;
     @FXML
-    private TableColumn<?, ?> colEmailPL;
+    private TableColumn<Product, String> colSubsDatePL;
     @FXML
-    private TableColumn<?, ?> colPasswordPL;
-    @FXML
-    private TableColumn<?, ?> colSubsDatePL;
-    @FXML
-    private TableColumn<?, ?> colSubsValuePL;
-
+    private TableColumn<Product, String> colSubsValuePL;
+    
+    DateTimeFormatter dateTimeFormater = DateTimeFormatter.ofPattern("dd-MMMM-yyyy");
+    
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        
+        // set tables data
+        settbProductsData();
+        settbProductsPLData();
+        
+        // set date
+        txtSubsDate.setValue(LocalDate.now());
+        
+        // table selection listener
+        
+        tbProducts.getFocusModel().focusedCellProperty().addListener(new ChangeListener<TablePosition>() {
+            @Override
+            public void changed(ObservableValue<? extends TablePosition> observable, TablePosition oldValue, TablePosition newValue) {
+                try {
+                    Product product = tbProducts.getSelectionModel().getSelectedItem();
+                    
+                    txtSerial.setText(product.getSerial());
+                    txtBuyerName.setText(product.getBuyerName());
+                    txtPhone.setText(product.getBuyerPhone());
+                    txtEmail.setText(product.getBuyerEmail());
+                    txtPassword.setText(product.getPassword());
+                    txtSubsDate.setValue(LocalDate.parse(product.getSubscribtionDate(), dateTimeFormater));
+                    txtSubsValue.setText(String.valueOf(product.getSubscribtionValue()));
+                    
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    AlertMaker.showErrorALert(e.getMessage());
+                }
+            }
+            
+        });
     }    
 
     @FXML
     private void save(ActionEvent event) {
+        try {
+            
+            // validation
+            if(txtSerial.getText().isEmpty()) {
+                AlertMaker.showErrorALert("Enter the serial");
+                return;
+            }
+            
+            if(txtBuyerName.getText().isEmpty()){
+                AlertMaker.showErrorALert("Enter buyer name");
+                return;
+            }
+            
+            if(txtPhone.getText().isEmpty()) {
+                AlertMaker.showErrorALert("Enter Phone");
+                return;
+            }
+            
+            if(txtEmail.getText().isEmpty()) {
+                AlertMaker.showErrorALert("Enter Email");
+                return;
+            }
+            
+            if(txtPassword.getText().isEmpty()) {
+                AlertMaker.showErrorALert("Enter Password");
+                return;
+            }
+            
+            if(txtSubsDate.getValue().equals(null)) {
+                AlertMaker.showErrorALert("Choose Date");
+                return;
+            }
+            
+            if(txtSubsValue.getText().isEmpty()) {
+                AlertMaker.showErrorALert("Enter Subscribtion Value");
+                return;
+            }
+            
+            
+            
+            String serial = txtSerial.getText();
+            String buyerName = txtBuyerName.getText();
+            String phone = txtPhone.getText();
+            String email = txtEmail.getText();
+            String password = txtPassword.getText();
+            Date d = Date.from(txtSubsDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+            String date = DateFormater.format(d);
+            double value = Double.valueOf(txtSubsValue.getText());
+            
+            
+            
+            // create product
+            Product product = Product.builder()
+                    .serial(serial)
+                    .buyerName(buyerName)
+                    .buyerPhone(phone)
+                    .buyerEmail(email)
+                    .password(password)
+                    .subscribtionDate(date)
+                    .subscribtionValue(value)
+                    .build();
+            
+            if(productRepo.save(product)) {
+                lbStatus.setText(product.getSerial() + " Saved");
+                settbProductsData();
+                settbProductsPLData();
+                clearTextFields();
+                txtSerial.requestFocus();
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertMaker.showErrorALert(e.getMessage());
+        }
     }
 
     @FXML
     private void update(ActionEvent event) {
+        
+        try {
+            System.out.println("update");
+            // validation
+            if(txtSerial.getText().isEmpty()) {
+                AlertMaker.showErrorALert("Enter the serial");
+                return;
+            }
+            
+            if(txtBuyerName.getText().isEmpty()){
+                AlertMaker.showErrorALert("Enter buyer name");
+                return;
+            }
+            
+            if(txtPhone.getText().isEmpty()) {
+                AlertMaker.showErrorALert("Enter Phone");
+                return;
+            }
+            
+            if(txtEmail.getText().isEmpty()) {
+                AlertMaker.showErrorALert("Enter Email");
+                return;
+            }
+            
+            if(txtPassword.getText().isEmpty()) {
+                AlertMaker.showErrorALert("Enter Password");
+                return;
+            }
+            
+            if(txtSubsDate.getValue().equals(null)) {
+                AlertMaker.showErrorALert("Choose Date");
+                return;
+            }
+            
+            if(txtSubsValue.getText().isEmpty()) {
+                AlertMaker.showErrorALert("Enter Subscribtion Value");
+                return;
+            }
+            
+            
+            
+            String serial = txtSerial.getText();
+            String buyerName = txtBuyerName.getText();
+            String phone = txtPhone.getText();
+            String email = txtEmail.getText();
+            String password = txtPassword.getText();
+            Date d = Date.from(txtSubsDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+            String date = DateFormater.format(d);
+            double value = Double.valueOf(txtSubsValue.getText());
+            int id = tbProducts.getSelectionModel().getSelectedItem().getId();
+            
+            
+            Product product = Product.builder()
+                    .id(id)
+                    .serial(serial)
+                    .buyerName(buyerName)
+                    .buyerPhone(phone)
+                    .buyerEmail(email)
+                    .password(password)
+                    .subscribtionDate(date)
+                    .subscribtionValue(value)
+                    .build();
+            System.out.println(product.getId());
+            
+            if(productRepo.update(product)) {
+                lbStatus.setText(product.getSerial() + " Updated");
+                settbProductsData();
+                settbProductsPLData();
+                clearTextFields();
+                txtSerial.requestFocus();
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertMaker.showErrorALert(e.getMessage());
+        }
     }
 
     @FXML
     private void delete(ActionEvent event) {
+    }
+
+    private void settbProductsData() {
+        try {
+            List list = productRepo.findAll();
+            ObservableList<Product> data = FXCollections.observableArrayList(list);
+            
+            
+            colId.setCellValueFactory(new PropertyValueFactory<Product, Integer>("id"));
+            colSerial.setCellValueFactory(new PropertyValueFactory<Product, String>("serial"));
+            colBuyerName.setCellValueFactory(new PropertyValueFactory<Product, String>("buyerName"));
+            colPhone.setCellValueFactory(new PropertyValueFactory<Product, String>("buyerPhone"));
+            colEmail.setCellValueFactory(new PropertyValueFactory<Product, String>("buyerEmail"));
+            colPassword.setCellValueFactory(new PropertyValueFactory<Product, String>("password"));
+            colSubsDate.setCellValueFactory(new PropertyValueFactory<Product, String>("subscribtionDate"));
+            colSubsValue.setCellValueFactory(new PropertyValueFactory<Product, Double>("subscribtionValue"));
+            
+            tbProducts.setItems((javafx.collections.ObservableList<Product>) data);
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertMaker.showErrorALert(e.getMessage());
+        }
+    }
+
+    private void settbProductsPLData() {
+        try {
+            List list = productRepo.findAll();
+             ObservableList<Product> data = FXCollections.observableArrayList(list);
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertMaker.showErrorALert(e.getMessage());
+        }
+    }
+
+    private void clearTextFields() {
+        try {
+            txtSerial.clear();
+            txtBuyerName.clear();
+            txtPhone.clear();
+            txtEmail.clear();
+            txtPassword.clear();
+            txtSubsDate.setValue(LocalDate.now());
+            txtSubsValue.clear();
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertMaker.showErrorALert(e.getMessage());
+        }
     }
     
 }

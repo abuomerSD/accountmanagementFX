@@ -276,11 +276,17 @@ public class ProductsController implements Initializable {
             Date d = Date.from(txtSubsDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
             String date = DateFormater.format(d);
             double value = Double.valueOf(txtSubsValue.getText());
-            int id = tbProducts.getSelectionModel().getSelectedItem().getId();
+//            int id = tbProducts.getSelectionModel().getSelectedItem().getId();
             
+            Product oldProduct = tbProducts.getSelectionModel().getSelectedItem();
+            
+            if(oldProduct == null) {
+                AlertMaker.showErrorALert("Choose Product First");
+                return;
+            }
             
             Product product = Product.builder()
-                    .id(id)
+                    .id(oldProduct.getId())
                     .serial(serial)
                     .buyerName(buyerName)
                     .buyerPhone(phone)

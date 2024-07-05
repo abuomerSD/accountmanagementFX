@@ -9,8 +9,10 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -19,6 +21,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -26,6 +29,7 @@ import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 
 
 public class ProductsController implements Initializable {
@@ -98,7 +102,7 @@ public class ProductsController implements Initializable {
     @FXML
     private TableColumn<Product, String> colSubsDatePL;
     @FXML
-    private TableColumn<Product, String> colSubsValuePL;
+    private TableColumn<Product, Double> colSubsValuePL;
     
     DateTimeFormatter dateTimeFormater = DateTimeFormatter.ofPattern("dd-MMMM-yyyy");
     
@@ -124,6 +128,8 @@ public class ProductsController implements Initializable {
                 try {
                     Product product = tbProducts.getSelectionModel().getSelectedItem();
                     
+                    if(product == null) return;
+                    
                     txtSerial.setText(product.getSerial());
                     txtBuyerName.setText(product.getBuyerName());
                     txtPhone.setText(product.getBuyerPhone());
@@ -134,7 +140,7 @@ public class ProductsController implements Initializable {
                     
                 } catch (Exception e) {
                     e.printStackTrace();
-                    AlertMaker.showErrorALert(e.getMessage());
+                    AlertMaker.showErrorALert(e.toString());
                 }
             }
             
@@ -223,7 +229,7 @@ public class ProductsController implements Initializable {
     private void update(ActionEvent event) {
         
         try {
-            System.out.println("update");
+//            System.out.println("update");
             // validation
             if(txtSerial.getText().isEmpty()) {
                 AlertMaker.showErrorALert("Enter the serial");
@@ -283,14 +289,17 @@ public class ProductsController implements Initializable {
                     .subscribtionDate(date)
                     .subscribtionValue(value)
                     .build();
-            System.out.println(product.getId());
+//            System.out.println(product.getId());
+            Optional<ButtonType> response = AlertMaker.showConfirmationAlert("update product with serial: "+ product.getSerial() + " ?");
             
-            if(productRepo.update(product)) {
-                lbStatus.setText(product.getSerial() + " Updated");
-                settbProductsData();
-                settbProductsPLData();
-                clearTextFields();
-                txtSerial.requestFocus();
+            if(response.get() == ButtonType.OK) {
+                if(productRepo.update(product)) {
+                    lbStatus.setText(product.getSerial() + " Updated");
+                    settbProductsData();
+                    settbProductsPLData();
+                    clearTextFields();
+                    txtSerial.requestFocus();
+                }
             }
             
         } catch (Exception e) {
@@ -301,6 +310,28 @@ public class ProductsController implements Initializable {
 
     @FXML
     private void delete(ActionEvent event) {
+        try {
+            Product product = tbProducts.getSelectionModel().getSelectedItem();
+            
+            if(product == null) {
+                AlertMaker.showErrorALert("choose product first");
+                return;
+            }
+            
+            
+            Optional<ButtonType> response = AlertMaker.showConfirmationAlert("delete product with serial : " + product.getSerial() + " ?");
+            
+            if(response.get() == ButtonType.OK) {
+                if(productRepo.delete(product.getId())) {
+                    settbProductsData();
+                    settbProductsPLData();
+                    lbStatus.setText(product.getSerial() + " Deleted");
+                }
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+            AlertMaker.showErrorALert(e.toString());
+        }
     }
 
     private void settbProductsData() {
@@ -328,7 +359,18 @@ public class ProductsController implements Initializable {
     private void settbProductsPLData() {
         try {
             List list = productRepo.findAll();
-             ObservableList<Product> data = FXCollections.observableArrayList(list);
+            ObservableList<Product> data = FXCollections.observableArrayList(list);
+            
+            colIdPL.setCellValueFactory(new PropertyValueFactory<Product, Integer>("id"));
+            colSerialPL.setCellValueFactory(new PropertyValueFactory<Product, String>("serial"));
+            colBuyerNamePL.setCellValueFactory(new PropertyValueFactory<Product, String>("buyerName"));
+            colPhonePL.setCellValueFactory(new PropertyValueFactory<Product, String>("buyerPhone"));
+            colEmailPL.setCellValueFactory(new PropertyValueFactory<Product, String>("buyerEmail"));
+            colPasswordPL.setCellValueFactory(new PropertyValueFactory<Product, String>("password"));
+            colSubsDatePL.setCellValueFactory(new PropertyValueFactory<Product, String>("subscribtionDate"));
+            colSubsValuePL.setCellValueFactory(new PropertyValueFactory<Product, Double>("subscribtionValue"));
+            
+             tbProductsPL.setItems(data);
         } catch (Exception e) {
             e.printStackTrace();
             AlertMaker.showErrorALert(e.getMessage());
@@ -346,8 +388,42 @@ public class ProductsController implements Initializable {
             txtSubsValue.clear();
         } catch (Exception e) {
             e.printStackTrace();
-            AlertMaker.showErrorALert(e.getMessage());
+            AlertMaker.showErrorALert(e.toString());
         }
     }
+
+    @FXML
+    private void filterTableProducts(KeyEvent event) {
+        try {
+            String serial = txtSerialSearch.getText();
+            String BuyerName = txtBNSearch.getText();
+            
+            ArrayList list = productRepo.findBySerialOrBuyerName(serial, BuyerName);
+            ObservableList<Product> data = FXCollections.observableArrayList(list);
+            
+            tbProducts.setItems(data);
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertMaker.showErrorALert(e.toString());
+        }
+    }
+
+    @FXML
+    private void filterTableProductsList(KeyEvent event) {
+        try {
+            String serial = txtSerialSearchPL.getText();
+            String BuyerName = txtBNSearchPL.getText();
+            
+            ArrayList list = productRepo.findBySerialOrBuyerName(serial, BuyerName);
+            ObservableList<Product> data = FXCollections.observableArrayList(list);
+            
+            tbProductsPL.setItems(data);
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertMaker.showErrorALert(e.toString());
+        }
+    }
+    
+    
     
 }

@@ -53,6 +53,6 @@ public class ProductBuilder {
     }
     
     public Product build() {
-        return new Product(serial, buyerName, buyerPhone, buyerEmail, password, subscribtionDate, subscribtionValue);
+        return new Product(id, serial, buyerName, buyerPhone, buyerEmail, password, subscribtionDate, subscribtionValue);
     }
 }

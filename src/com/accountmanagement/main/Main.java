@@ -54,7 +54,7 @@ public class Main  extends Application{
             
             // flatlaf look and feel
             
-            FlatLightLaf.setup();
+//            FlatLightLaf.setup();
             
             // check if the app activated
             

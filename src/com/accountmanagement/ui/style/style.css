@@ -1,0 +1,49 @@
+.btn-save {
+    -fx-background-color: #1A5319;
+    /*-fx-background-radius: 40px;*/
+    -fx-text-fill: white;
+/*    -fx-border-width: 5;
+    -fx-border-style: solid;
+    -fx-border-color: #1A5319;
+    -fx-border-radius: 20px;*/
+}
+
+.btn-save:hover{
+    -fx-background-color: #508D4E;
+}
+
+.btn-update {
+    -fx-background-color: #0F67B1;
+    -fx-text-fill: white;
+}
+
+.btn-update:hover {
+    -fx-background-color: #3FA2F6;
+}
+
+.btn-delete {
+    -fx-background-color: #C40C0C;
+    -fx-text-fill: white;
+}
+
+.btn-delete:hover {
+    -fx-background-color: #FF6500;
+}
+
+.icon {
+    -fx-fill: white;
+}
+
+.sidebar {
+    -fx-background-color: #153448;
+}
+
+.btn-sidebar {
+    -fx-background-color: #153448;
+    -fx-text-fill: white;
+}
+
+.btn-sidebar:hover {
+    -fx-background-color: #3C5B6F;
+}
+

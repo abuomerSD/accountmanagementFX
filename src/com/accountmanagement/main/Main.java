@@ -3,7 +3,6 @@ package com.accountmanagement.main;
 import com.accountmanagement.database.DatabaseTablesCreator;
 import com.accountmanagement.models.AccountMovement;
 import com.accountmanagement.repositories.accountmovement.AccountMovementSqliteRepository;
-import com.formdev.flatlaf.FlatLightLaf;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javafx.application.Application;
@@ -17,11 +16,14 @@ public class Main  extends Application{
     public static void main(String [] args) throws SQLException{
         
         // Fix Arabic letters in JavaFX
-        System.setProperty("prism.lcdtext", "false");
-        System.setProperty("prism.text", "t2k");
+//        System.setProperty("prism.lcdtext", "false");
+//        System.setProperty("prism.text", "t2k");
+
+        
         
         launch(args);
-   
+        
+
     }
     
     private static boolean isActivated() {

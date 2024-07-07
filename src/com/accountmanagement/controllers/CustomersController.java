@@ -4,6 +4,7 @@ package com.accountmanagement.controllers;
 import com.accountmanagement.models.Customer;
 import com.accountmanagement.repositories.customer.CustomerSqliteRepository;
 import com.accountmanagement.utils.AlertMaker;
+import com.accountmanagement.utils.NotificationMaker;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -61,6 +62,8 @@ public class CustomersController implements Initializable {
                 try {
                     Customer customer = tbCustomer.getSelectionModel().getSelectedItem();
                     
+                    if(customer == null) return;
+                    
                     txtCustomerName.setText(customer.getName());
                     txtCustomerPhone.setText(customer.getPhone());
                     
@@ -101,6 +104,7 @@ public class CustomersController implements Initializable {
                 clearCustomerTf();
                 txtCustomerName.requestFocus();
                 lbCustomerStatus.setText(customer.getName() + " Saved");
+                NotificationMaker.showInformation(customer.getName() + " Saved");
             }
             
         } catch (Exception e) {
@@ -148,6 +152,7 @@ public class CustomersController implements Initializable {
                     clearCustomerTf();
                     txtCustomerName.requestFocus();
                     lbCustomerStatus.setText(oldCustomer.getName() + " Updated");
+                    NotificationMaker.showInformation(oldCustomer.getName() + " Updated");
                 }
             }
             
@@ -176,6 +181,7 @@ public class CustomersController implements Initializable {
                     clearCustomerTf();
                     txtCustomerName.requestFocus();
                     lbCustomerStatus.setText(customer.getName() + " Deleted");
+                    NotificationMaker.showInformation(customer.getName() + " Deleted");
                 }
             }
             

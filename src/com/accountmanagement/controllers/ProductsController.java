@@ -5,6 +5,7 @@ import com.accountmanagement.models.Product;
 import com.accountmanagement.repositories.product.ProductSqliteRepository;
 import com.accountmanagement.utils.AlertMaker;
 import com.accountmanagement.utils.DateFormater;
+import com.accountmanagement.utils.NotificationMaker;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -213,6 +214,7 @@ public class ProductsController implements Initializable {
             
             if(productRepo.save(product)) {
                 lbStatus.setText(product.getSerial() + " Saved");
+                NotificationMaker.showInformation(product.getSerial() + " Saved");
                 settbProductsData();
                 settbProductsPLData();
                 clearTextFields();
@@ -301,6 +303,7 @@ public class ProductsController implements Initializable {
             if(response.get() == ButtonType.OK) {
                 if(productRepo.update(product)) {
                     lbStatus.setText(product.getSerial() + " Updated");
+                    NotificationMaker.showInformation(product.getSerial() + " Updated");
                     settbProductsData();
                     settbProductsPLData();
                     clearTextFields();
@@ -332,6 +335,7 @@ public class ProductsController implements Initializable {
                     settbProductsData();
                     settbProductsPLData();
                     lbStatus.setText(product.getSerial() + " Deleted");
+                    NotificationMaker.showInformation(product.getSerial() + " Deleted");
                 }
             }
         } catch(Exception e) {

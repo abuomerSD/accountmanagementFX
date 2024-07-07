@@ -14,8 +14,12 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import java.net.*?>
 
 <AnchorPane id="AnchorPane" prefHeight="802.0" prefWidth="1070.0" stylesheets="@style/style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.accountmanagement.controllers.ProductsController">
+    <stylesheets>
+        <URL value="@/com/accountmanagement/ui/style/style.css"/>
+    </stylesheets>
    <children>
       <HBox nodeOrientation="LEFT_TO_RIGHT" prefHeight="800.0" prefWidth="1070.0">
          <children>

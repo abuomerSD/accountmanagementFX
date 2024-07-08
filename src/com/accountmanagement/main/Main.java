@@ -1,5 +1,6 @@
 package com.accountmanagement.main;
 
+import com.accountmanagement.controllers.HomeController;
 import com.accountmanagement.database.DatabaseTablesCreator;
 import com.accountmanagement.models.AccountMovement;
 import com.accountmanagement.repositories.accountmovement.AccountMovementSqliteRepository;
@@ -65,9 +66,16 @@ public class Main  extends Application{
                 return;
             } 
             
-            Parent root = FXMLLoader.load(getClass().getResource("/com/accountmanagement/ui/Home.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/accountmanagement/ui/Home.fxml"));
+            Parent root = loader.load();
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
+            
+            HomeController controller = loader.getController();
+            
+            primaryStage.setOnHidden(e -> controller.shutDown());
+            
+            
             primaryStage.show();
                      
                         

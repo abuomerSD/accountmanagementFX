@@ -1,8 +1,10 @@
 
 package com.accountmanagement.controllers;
 
+import com.accountmanagement.database.DbConnection;
 import com.accountmanagement.utils.AlertMaker;
 import java.net.URL;
+import java.sql.Connection;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -21,6 +23,20 @@ public class HomeController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
     }    
+    
+    public void shutDown() {
+        try {
+            Connection con = DbConnection.getConnection();
+            
+            if(! con.isClosed()) {
+                con.close();
+                System.out.println("con closed");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertMaker.showErrorALert(e.toString());
+        }
+    }
 
     @FXML
     private void openProductsUI(ActionEvent event) {

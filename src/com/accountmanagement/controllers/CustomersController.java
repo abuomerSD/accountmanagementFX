@@ -1,6 +1,7 @@
 
 package com.accountmanagement.controllers;
 
+import com.accountmanagement.models.Currency;
 import com.accountmanagement.models.Customer;
 import com.accountmanagement.repositories.customer.CustomerSqliteRepository;
 import com.accountmanagement.utils.AlertMaker;
@@ -54,13 +55,13 @@ public class CustomersController implements Initializable {
     @FXML
     private TextField txtCurrencyNameSearch;
     @FXML
-    private TableView<?> tbCurrency;
+    private TableView<Currency> tbCurrency;
     @FXML
     private DatePicker txtInDocDate;
     @FXML
-    private ComboBox<?> cbInDocCustomerName;
+    private ComboBox<String> cbInDocCustomerName;
     @FXML
-    private ComboBox<?> cbInDocCurrencyName;
+    private ComboBox<String> cbInDocCurrencyName;
     @FXML
     private TextField txtInDocValue;
     @FXML
@@ -74,9 +75,9 @@ public class CustomersController implements Initializable {
     @FXML
     private DatePicker txtOutDocDate;
     @FXML
-    private ComboBox<?> cbOutDocCustomerName;
+    private ComboBox<String> cbOutDocCustomerName;
     @FXML
-    private ComboBox<?> cbOutDocCurrencyName;
+    private ComboBox<String> cbOutDocCurrencyName;
     @FXML
     private TextField txtOutDocValue;
     @FXML
@@ -88,9 +89,9 @@ public class CustomersController implements Initializable {
     @FXML
     private TableView<?> tbOutDoc;
     @FXML
-    private ComboBox<?> cbReportCustomerName;
+    private ComboBox<String> cbReportCustomerName;
     @FXML
-    private ComboBox<?> cbReportCurrencyName;
+    private ComboBox<String> cbReportCurrencyName;
 
     /**
      * Initializes the controller class.

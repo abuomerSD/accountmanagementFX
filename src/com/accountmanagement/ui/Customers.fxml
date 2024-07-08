@@ -53,6 +53,9 @@
                                                    </HBox.margin>
                                                 </TextField>
                                              </children>
+                                             <VBox.margin>
+                                                <Insets top="10.0" />
+                                             </VBox.margin>
                                           </HBox>
                                           <HBox prefHeight="50.0" prefWidth="481.0">
                                              <children>
@@ -164,6 +167,9 @@
                                                    </HBox.margin>
                                                 </TextField>
                                              </children>
+                                             <VBox.margin>
+                                                <Insets top="10.0" />
+                                             </VBox.margin>
                                           </HBox>
                                           <VBox prefHeight="708.0" prefWidth="661.0">
                                              <children>
@@ -215,6 +221,9 @@
                                                    </HBox.margin>
                                                 </TextField>
                                              </children>
+                                             <VBox.margin>
+                                                <Insets top="10.0" />
+                                             </VBox.margin>
                                           </HBox>
                                           <HBox alignment="CENTER" prefHeight="51.0" prefWidth="409.0">
                                              <children>
@@ -287,7 +296,7 @@
                                        <children>
                                           <HBox alignment="CENTER_LEFT" prefHeight="59.0" prefWidth="662.0">
                                              <children>
-                                                <Label alignment="CENTER_RIGHT" prefHeight="89.0" prefWidth="128.0" text="Currency Name :">
+                                                <Label alignment="CENTER_RIGHT" prefHeight="59.0" prefWidth="165.0" text="Currency Name :">
                                                    <font>
                                                       <Font name="Arial Bold" size="14.0" />
                                                    </font>
@@ -301,6 +310,9 @@
                                                    </HBox.margin>
                                                 </TextField>
                                              </children>
+                                             <VBox.margin>
+                                                <Insets top="10.0" />
+                                             </VBox.margin>
                                           </HBox>
                                           <HBox alignment="CENTER" prefHeight="450.0" prefWidth="662.0">
                                              <children>
@@ -497,6 +509,9 @@
                                                    </HBox.margin>
                                                 </TextField>
                                              </children>
+                                             <VBox.margin>
+                                                <Insets top="10.0" />
+                                             </VBox.margin>
                                           </HBox>
                                           <HBox prefHeight="450.0" prefWidth="650.0">
                                              <children>
@@ -699,6 +714,9 @@
                                                    </HBox.margin>
                                                 </TextField>
                                              </children>
+                                             <VBox.margin>
+                                                <Insets top="10.0" />
+                                             </VBox.margin>
                                           </HBox>
                                           <HBox prefHeight="450.0" prefWidth="650.0">
                                              <children>
@@ -728,9 +746,9 @@
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
-                              <HBox layoutX="52.0" layoutY="54.0" prefHeight="767.0" prefWidth="1070.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <HBox alignment="CENTER" layoutX="52.0" layoutY="54.0" prefHeight="767.0" prefWidth="1070.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
-                                    <VBox prefHeight="200.0" prefWidth="410.0">
+                                    <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="410.0">
                                        <children>
                                           <HBox alignment="CENTER_LEFT" prefHeight="59.0" prefWidth="410.0">
                                              <children>
@@ -740,6 +758,9 @@
                                                    </font>
                                                 </Label>
                                              </children>
+                                             <VBox.margin>
+                                                <Insets top="100.0" />
+                                             </VBox.margin>
                                           </HBox>
                                           <HBox alignment="CENTER_LEFT" prefHeight="59.0" prefWidth="410.0">
                                              <children>

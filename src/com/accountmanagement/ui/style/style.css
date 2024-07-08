@@ -47,3 +47,16 @@
     -fx-background-color: #3C5B6F;
 }
 
+.txt-incoming {
+    -fx-text-fill: #049e32;
+    -fx-background-radius: 20px;
+}
+
+.txt-outgoing {
+    -fx-text-fill: #da3c3e;
+    -fx-background-radius: 20px;
+}
+
+.txt-rounded-background {
+    -fx-background-radius: 20px;
+}

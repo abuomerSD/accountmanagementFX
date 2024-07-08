@@ -17,6 +17,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
@@ -45,6 +47,50 @@ public class CustomersController implements Initializable {
     private TableColumn<Customer, String> colCustomerPhone;
     
     CustomerSqliteRepository customerRepo = new CustomerSqliteRepository();
+    @FXML
+    private TextField txtCurrencyName;
+    @FXML
+    private Label lbCurrencyStatus;
+    @FXML
+    private TextField txtCurrencyNameSearch;
+    @FXML
+    private TableView<?> tbCurrency;
+    @FXML
+    private DatePicker txtInDocDate;
+    @FXML
+    private ComboBox<?> cbInDocCustomerName;
+    @FXML
+    private ComboBox<?> cbInDocCurrencyName;
+    @FXML
+    private TextField txtInDocValue;
+    @FXML
+    private TextField txtInDocComment;
+    @FXML
+    private Label lbInDocStatus;
+    @FXML
+    private TextField txtInDocIdSearch;
+    @FXML
+    private TableView<?> tbInDoc;
+    @FXML
+    private DatePicker txtOutDocDate;
+    @FXML
+    private ComboBox<?> cbOutDocCustomerName;
+    @FXML
+    private ComboBox<?> cbOutDocCurrencyName;
+    @FXML
+    private TextField txtOutDocValue;
+    @FXML
+    private TextField txtOutDocComment;
+    @FXML
+    private Label lbOutDocStatus;
+    @FXML
+    private TextField txtOutDocIdSearch;
+    @FXML
+    private TableView<?> tbOutDoc;
+    @FXML
+    private ComboBox<?> cbReportCustomerName;
+    @FXML
+    private ComboBox<?> cbReportCurrencyName;
 
     /**
      * Initializes the controller class.
@@ -233,5 +279,45 @@ public class CustomersController implements Initializable {
             e.printStackTrace();
             AlertMaker.showErrorALert(e.toString());
         }
+    }
+
+    @FXML
+    private void saveCurrency(ActionEvent event) {
+    }
+
+    @FXML
+    private void updateCurrency(ActionEvent event) {
+    }
+
+    @FXML
+    private void deleteCurrency(ActionEvent event) {
+    }
+
+    @FXML
+    private void saveIncomingDocument(ActionEvent event) {
+    }
+
+    @FXML
+    private void updateIncomingDocument(ActionEvent event) {
+    }
+
+    @FXML
+    private void deleteIncomingDocument(ActionEvent event) {
+    }
+
+    @FXML
+    private void saveOutgoingDocument(ActionEvent event) {
+    }
+
+    @FXML
+    private void updateOutgoingDocument(ActionEvent event) {
+    }
+
+    @FXML
+    private void showCustomerReportPerCurrency(ActionEvent event) {
+    }
+
+    @FXML
+    private void showCustomerTotalReport(ActionEvent event) {
     }
 }

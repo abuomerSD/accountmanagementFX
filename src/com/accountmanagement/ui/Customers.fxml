@@ -4,6 +4,8 @@
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
@@ -42,7 +44,7 @@
                                                       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                                    </HBox.margin>
                                                 </Label>
-                                                <TextField fx:id="txtCustomerName" prefHeight="40.0" prefWidth="250.0" promptText="Customer Name">
+                                                <TextField fx:id="txtCustomerName" prefHeight="40.0" prefWidth="250.0" promptText="Customer Name" styleClass="txt-rounded-background">
                                                    <font>
                                                       <Font name="Arial Bold" size="14.0" />
                                                    </font>
@@ -62,7 +64,7 @@
                                                       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                                    </HBox.margin>
                                                 </Label>
-                                                <TextField fx:id="txtCustomerPhone" prefHeight="40.0" prefWidth="250.0" promptText="Phone">
+                                                <TextField fx:id="txtCustomerPhone" prefHeight="40.0" prefWidth="250.0" promptText="Phone" styleClass="txt-rounded-background">
                                                    <font>
                                                       <Font name="Arial Bold" size="14.0" />
                                                    </font>
@@ -153,7 +155,7 @@
                                                       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                                    </HBox.margin>
                                                 </Label>
-                                                <TextField fx:id="txtCustomerNameSearch" onKeyReleased="#filterCustomerTable" prefHeight="40.0" prefWidth="250.0" promptText="Customer Name">
+                                                <TextField fx:id="txtCustomerNameSearch" onKeyReleased="#filterCustomerTable" prefHeight="40.0" prefWidth="250.0" promptText="Customer Name" styleClass="txt-rounded-background">
                                                    <font>
                                                       <Font name="Arial Bold" size="14.0" />
                                                    </font>
@@ -165,9 +167,9 @@
                                           </HBox>
                                           <VBox prefHeight="708.0" prefWidth="661.0">
                                              <children>
-                                                <HBox prefHeight="553.0" prefWidth="661.0">
+                                                <HBox prefHeight="450.0" prefWidth="650.0">
                                                    <children>
-                                                      <TableView fx:id="tbCustomer" prefHeight="446.0" prefWidth="638.0">
+                                                      <TableView fx:id="tbCustomer" prefHeight="450.0" prefWidth="650.0">
                                                         <columns>
                                                           <TableColumn fx:id="colCustomerId" prefWidth="75.0" text="ID" />
                                                           <TableColumn fx:id="colCustomerName" prefWidth="324.0" text="Customer Name" />
@@ -204,7 +206,7 @@
                                                       <Font name="Arial Bold" size="14.0" />
                                                    </font>
                                                 </Label>
-                                                <TextField fx:id="txtCurrencyName" prefHeight="40.0" prefWidth="250.0" promptText="Currency Name">
+                                                <TextField fx:id="txtCurrencyName" prefHeight="40.0" prefWidth="250.0" promptText="Currency Name" styleClass="txt-rounded-background">
                                                    <font>
                                                       <Font name="Arial Bold" size="14.0" />
                                                    </font>
@@ -290,16 +292,19 @@
                                                       <Font name="Arial Bold" size="14.0" />
                                                    </font>
                                                 </Label>
-                                                <TextField fx:id="txtCurrencyNameSearch" prefHeight="40.0" prefWidth="250.0" promptText="Currency Name">
+                                                <TextField fx:id="txtCurrencyNameSearch" prefHeight="40.0" prefWidth="250.0" promptText="Currency Name" styleClass="txt-rounded-background">
                                                    <font>
                                                       <Font name="Arial Bold" size="14.0" />
                                                    </font>
+                                                   <HBox.margin>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </HBox.margin>
                                                 </TextField>
                                              </children>
                                           </HBox>
-                                          <HBox alignment="CENTER" prefHeight="500.0" prefWidth="662.0">
+                                          <HBox alignment="CENTER" prefHeight="450.0" prefWidth="662.0">
                                              <children>
-                                                <TableView fx:id="tbCurrency" prefHeight="500.0" prefWidth="578.0">
+                                                <TableView fx:id="tbCurrency" prefHeight="450.0" prefWidth="578.0">
                                                   <columns>
                                                     <TableColumn prefWidth="75.0" text="ID" />
                                                     <TableColumn prefWidth="501.0" text="Currency Name" />
@@ -316,17 +321,491 @@
                 </Tab>
                   <Tab text="Incoming Docs">
                     <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <HBox layoutX="39.0" layoutY="45.0" prefHeight="767.0" prefWidth="1070.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <VBox prefHeight="200.0" prefWidth="410.0">
+                                       <children>
+                                          <HBox alignment="CENTER_LEFT" prefHeight="59.0" prefWidth="410.0">
+                                             <children>
+                                                <Label alignment="CENTER_RIGHT" prefHeight="59.0" prefWidth="186.0" text="Incoming Document :" textFill="#049e32">
+                                                   <font>
+                                                      <Font name="Arial Bold" size="16.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER_LEFT" prefHeight="59.0" prefWidth="410.0">
+                                             <children>
+                                                <Label alignment="CENTER_RIGHT" prefHeight="89.0" prefWidth="128.0" text="Date :">
+                                                   <font>
+                                                      <Font name="Arial Bold" size="14.0" />
+                                                   </font>
+                                                </Label>
+                                                <DatePicker fx:id="txtInDocDate" prefHeight="36.0" prefWidth="251.0">
+                                                   <HBox.margin>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </HBox.margin>
+                                                </DatePicker>
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER_LEFT" prefHeight="59.0" prefWidth="410.0">
+                                             <children>
+                                                <Label alignment="CENTER_RIGHT" prefHeight="89.0" prefWidth="128.0" text="Customer :">
+                                                   <font>
+                                                      <Font name="Arial Bold" size="14.0" />
+                                                   </font>
+                                                </Label>
+                                                <ComboBox fx:id="cbInDocCustomerName" prefHeight="40.0" prefWidth="250.0" styleClass="txt-rounded-background">
+                                                   <HBox.margin>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </HBox.margin>
+                                                </ComboBox>
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER_LEFT" prefHeight="59.0" prefWidth="410.0">
+                                             <children>
+                                                <Label alignment="CENTER_RIGHT" prefHeight="89.0" prefWidth="128.0" text="Currency :">
+                                                   <font>
+                                                      <Font name="Arial Bold" size="14.0" />
+                                                   </font>
+                                                </Label>
+                                                <ComboBox fx:id="cbInDocCurrencyName" prefHeight="40.0" prefWidth="250.0" styleClass="txt-rounded-background">
+                                                   <HBox.margin>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </HBox.margin>
+                                                </ComboBox>
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER_LEFT" prefHeight="59.0" prefWidth="410.0">
+                                             <children>
+                                                <Label alignment="CENTER_RIGHT" prefHeight="89.0" prefWidth="128.0" text="Value :">
+                                                   <font>
+                                                      <Font name="Arial Bold" size="14.0" />
+                                                   </font>
+                                                </Label>
+                                                <TextField fx:id="txtInDocValue" prefHeight="40.0" prefWidth="250.0" promptText="Document Value" styleClass="txt-incoming" text="0.00">
+                                                   <font>
+                                                      <Font name="Arial Bold" size="14.0" />
+                                                   </font>
+                                                   <HBox.margin>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </HBox.margin>
+                                                </TextField>
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER_LEFT" prefHeight="59.0" prefWidth="410.0">
+                                             <children>
+                                                <Label alignment="CENTER_RIGHT" prefHeight="89.0" prefWidth="128.0" text="Comment :">
+                                                   <font>
+                                                      <Font name="Arial Bold" size="14.0" />
+                                                   </font>
+                                                </Label>
+                                                <TextField fx:id="txtInDocComment" prefHeight="40.0" prefWidth="250.0" promptText="Comment" styleClass="txt-rounded-background">
+                                                   <font>
+                                                      <Font name="Arial Bold" size="14.0" />
+                                                   </font>
+                                                   <HBox.margin>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </HBox.margin>
+                                                </TextField>
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER" prefHeight="51.0" prefWidth="409.0">
+                                             <children>
+                                                <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#saveIncomingDocument" prefHeight="60.0" prefWidth="383.0" styleClass="btn-save" stylesheets="@style/style.css" text="Save">
+                                                   <HBox.margin>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </HBox.margin>
+                                                   <font>
+                                                      <Font name="Arial" size="14.0" />
+                                                   </font>
+                                                   <graphic>
+                                                      <FontAwesomeIcon iconName="SAVE" size="25" styleClass="icon" />
+                                                   </graphic>
+                                                </Button>
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER" prefHeight="45.0" prefWidth="409.0">
+                                             <children>
+                                                <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#updateIncomingDocument" prefHeight="60.0" prefWidth="383.0" styleClass="btn-update" stylesheets="@style/style.css" text="Update">
+                                                   <HBox.margin>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </HBox.margin>
+                                                   <font>
+                                                      <Font name="Arial" size="14.0" />
+                                                   </font>
+                                                   <graphic>
+                                                      <FontAwesomeIcon iconName="EDIT" size="25" styleClass="icon" />
+                                                   </graphic>
+                                                </Button>
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER" prefHeight="34.0" prefWidth="409.0">
+                                             <children>
+                                                <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#deleteIncomingDocument" prefHeight="60.0" prefWidth="383.0" styleClass="btn-delete" stylesheets="@style/style.css" text="Delete">
+                                                   <HBox.margin>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </HBox.margin>
+                                                   <font>
+                                                      <Font name="Arial" size="14.0" />
+                                                   </font>
+                                                   <graphic>
+                                                      <FontAwesomeIcon iconName="TRASH" size="25" styleClass="icon" />
+                                                   </graphic>
+                                                </Button>
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER_LEFT" prefHeight="59.0" prefWidth="410.0">
+                                             <children>
+                                                <Label alignment="CENTER_RIGHT" prefHeight="89.0" prefWidth="128.0" text="Status:">
+                                                   <font>
+                                                      <Font name="Arial Bold" size="14.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label fx:id="lbInDocStatus" prefHeight="59.0" prefWidth="283.0">
+                                                   <font>
+                                                      <Font name="Arial Bold" size="14.0" />
+                                                   </font>
+                                                   <HBox.margin>
+                                                      <Insets left="5.0" />
+                                                   </HBox.margin>
+                                                </Label>
+                                             </children>
+                                             <VBox.margin>
+                                                <Insets top="50.0" />
+                                             </VBox.margin>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
+                                    <VBox prefHeight="767.0" prefWidth="660.0">
+                                       <children>
+                                          <HBox alignment="CENTER_LEFT" prefHeight="59.0" prefWidth="410.0">
+                                             <children>
+                                                <Label alignment="CENTER_RIGHT" prefHeight="59.0" prefWidth="45.0" text="ID :">
+                                                   <font>
+                                                      <Font name="Arial Bold" size="14.0" />
+                                                   </font>
+                                                </Label>
+                                                <TextField fx:id="txtInDocIdSearch" prefHeight="40.0" prefWidth="250.0" promptText="Document ID" styleClass="txt-rounded-background">
+                                                   <font>
+                                                      <Font name="Arial Bold" size="14.0" />
+                                                   </font>
+                                                   <HBox.margin>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </HBox.margin>
+                                                </TextField>
+                                             </children>
+                                          </HBox>
+                                          <HBox prefHeight="450.0" prefWidth="650.0">
+                                             <children>
+                                                <TableView fx:id="tbInDoc" prefHeight="450.0" prefWidth="650.0">
+                                                  <columns>
+                                                    <TableColumn prefWidth="75.0" text="ID" />
+                                                    <TableColumn prefWidth="83.0" text="Date" />
+                                                      <TableColumn prefWidth="123.0" text="Customer Name" />
+                                                      <TableColumn prefWidth="96.0" text="Currency" />
+                                                      <TableColumn prefWidth="101.0" text="Value" />
+                                                      <TableColumn prefWidth="169.0" text="Comment" />
+                                                  </columns>
+                                                   <HBox.margin>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </HBox.margin>
+                                                </TableView>
+                                             </children></HBox>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                           </children></AnchorPane>
                     </content>
                   </Tab>
                   <Tab text="Outgoing Docs">
                     <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <HBox prefHeight="767.0" prefWidth="1070.0">
+                                 <children>
+                                    <VBox prefHeight="200.0" prefWidth="410.0">
+                                       <children>
+                                          <HBox alignment="CENTER_LEFT" prefHeight="59.0" prefWidth="410.0">
+                                             <children>
+                                                <Label alignment="CENTER_RIGHT" prefHeight="59.0" prefWidth="186.0" text="Outgoing Document :" textFill="#da3c3e">
+                                                   <font>
+                                                      <Font name="Arial Bold" size="16.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER_LEFT" prefHeight="59.0" prefWidth="410.0">
+                                             <children>
+                                                <Label alignment="CENTER_RIGHT" prefHeight="89.0" prefWidth="128.0" text="Date :">
+                                                   <font>
+                                                      <Font name="Arial Bold" size="14.0" />
+                                                   </font>
+                                                </Label>
+                                                <DatePicker fx:id="txtOutDocDate" prefHeight="36.0" prefWidth="251.0">
+                                                   <HBox.margin>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </HBox.margin>
+                                                </DatePicker>
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER_LEFT" prefHeight="59.0" prefWidth="410.0">
+                                             <children>
+                                                <Label alignment="CENTER_RIGHT" prefHeight="89.0" prefWidth="128.0" text="Customer :">
+                                                   <font>
+                                                      <Font name="Arial Bold" size="14.0" />
+                                                   </font>
+                                                </Label>
+                                                <ComboBox fx:id="cbOutDocCustomerName" prefHeight="40.0" prefWidth="250.0" styleClass="txt-rounded-background">
+                                                   <HBox.margin>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </HBox.margin>
+                                                </ComboBox>
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER_LEFT" prefHeight="59.0" prefWidth="410.0">
+                                             <children>
+                                                <Label alignment="CENTER_RIGHT" prefHeight="89.0" prefWidth="128.0" text="Currency :">
+                                                   <font>
+                                                      <Font name="Arial Bold" size="14.0" />
+                                                   </font>
+                                                </Label>
+                                                <ComboBox fx:id="cbOutDocCurrencyName" prefHeight="40.0" prefWidth="250.0" styleClass="txt-rounded-background">
+                                                   <HBox.margin>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </HBox.margin>
+                                                </ComboBox>
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER_LEFT" prefHeight="59.0" prefWidth="410.0">
+                                             <children>
+                                                <Label alignment="CENTER_RIGHT" prefHeight="89.0" prefWidth="128.0" text="Value :">
+                                                   <font>
+                                                      <Font name="Arial Bold" size="14.0" />
+                                                   </font>
+                                                </Label>
+                                                <TextField fx:id="txtOutDocValue" prefHeight="40.0" prefWidth="250.0" promptText="Document Value" styleClass="txt-outgoing" text="0.00">
+                                                   <font>
+                                                      <Font name="Arial Bold" size="14.0" />
+                                                   </font>
+                                                   <HBox.margin>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </HBox.margin>
+                                                </TextField>
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER_LEFT" prefHeight="59.0" prefWidth="410.0">
+                                             <children>
+                                                <Label alignment="CENTER_RIGHT" prefHeight="89.0" prefWidth="128.0" text="Comment :">
+                                                   <font>
+                                                      <Font name="Arial Bold" size="14.0" />
+                                                   </font>
+                                                </Label>
+                                                <TextField fx:id="txtOutDocComment" prefHeight="40.0" prefWidth="250.0" promptText="Comment" styleClass="txt-rounded-background">
+                                                   <font>
+                                                      <Font name="Arial Bold" size="14.0" />
+                                                   </font>
+                                                   <HBox.margin>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </HBox.margin>
+                                                </TextField>
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER" prefHeight="51.0" prefWidth="409.0">
+                                             <children>
+                                                <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#saveOutgoingDocument" prefHeight="60.0" prefWidth="383.0" styleClass="btn-save" stylesheets="@style/style.css" text="Save">
+                                                   <HBox.margin>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </HBox.margin>
+                                                   <font>
+                                                      <Font name="Arial" size="14.0" />
+                                                   </font>
+                                                   <graphic>
+                                                      <FontAwesomeIcon iconName="SAVE" size="25" styleClass="icon" />
+                                                   </graphic>
+                                                </Button>
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER" prefHeight="45.0" prefWidth="409.0">
+                                             <children>
+                                                <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#updateOutgoingDocument" prefHeight="60.0" prefWidth="383.0" styleClass="btn-update" stylesheets="@style/style.css" text="Update">
+                                                   <HBox.margin>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </HBox.margin>
+                                                   <font>
+                                                      <Font name="Arial" size="14.0" />
+                                                   </font>
+                                                   <graphic>
+                                                      <FontAwesomeIcon iconName="EDIT" size="25" styleClass="icon" />
+                                                   </graphic>
+                                                </Button>
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER" prefHeight="34.0" prefWidth="409.0">
+                                             <children>
+                                                <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#deleteIncomingDocument" prefHeight="60.0" prefWidth="383.0" styleClass="btn-delete" stylesheets="@style/style.css" text="Delete">
+                                                   <HBox.margin>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </HBox.margin>
+                                                   <font>
+                                                      <Font name="Arial" size="14.0" />
+                                                   </font>
+                                                   <graphic>
+                                                      <FontAwesomeIcon iconName="TRASH" size="25" styleClass="icon" />
+                                                   </graphic>
+                                                </Button>
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER_LEFT" prefHeight="59.0" prefWidth="410.0">
+                                             <children>
+                                                <Label alignment="CENTER_RIGHT" prefHeight="89.0" prefWidth="128.0" text="Status:">
+                                                   <font>
+                                                      <Font name="Arial Bold" size="14.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label fx:id="lbOutDocStatus" prefHeight="59.0" prefWidth="283.0">
+                                                   <font>
+                                                      <Font name="Arial Bold" size="14.0" />
+                                                   </font>
+                                                   <HBox.margin>
+                                                      <Insets left="5.0" />
+                                                   </HBox.margin>
+                                                </Label>
+                                             </children>
+                                             <VBox.margin>
+                                                <Insets top="50.0" />
+                                             </VBox.margin>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
+                                    <VBox prefHeight="767.0" prefWidth="660.0">
+                                       <children>
+                                          <HBox alignment="CENTER_LEFT" prefHeight="59.0" prefWidth="410.0">
+                                             <children>
+                                                <Label alignment="CENTER_RIGHT" prefHeight="59.0" prefWidth="45.0" text="ID :">
+                                                   <font>
+                                                      <Font name="Arial Bold" size="14.0" />
+                                                   </font>
+                                                </Label>
+                                                <TextField fx:id="txtOutDocIdSearch" prefHeight="40.0" prefWidth="250.0" promptText="Document ID" styleClass="txt-rounded-background">
+                                                   <font>
+                                                      <Font name="Arial Bold" size="14.0" />
+                                                   </font>
+                                                   <HBox.margin>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </HBox.margin>
+                                                </TextField>
+                                             </children>
+                                          </HBox>
+                                          <HBox prefHeight="450.0" prefWidth="650.0">
+                                             <children>
+                                                <TableView fx:id="tbOutDoc" prefHeight="450.0" prefWidth="650.0">
+                                                   <columns>
+                                                      <TableColumn prefWidth="75.0" text="ID" />
+                                                      <TableColumn prefWidth="83.0" text="Date" />
+                                                      <TableColumn prefWidth="123.0" text="Customer Name" />
+                                                      <TableColumn prefWidth="96.0" text="Currency" />
+                                                      <TableColumn prefWidth="101.0" text="Value" />
+                                                      <TableColumn prefWidth="169.0" text="Comment" />
+                                                   </columns>
+                                                   <HBox.margin>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </HBox.margin>
+                                                </TableView>
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                           </children></AnchorPane>
                     </content>
                   </Tab>
                   <Tab text="Customer Balance">
                     <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <HBox layoutX="52.0" layoutY="54.0" prefHeight="767.0" prefWidth="1070.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <VBox prefHeight="200.0" prefWidth="410.0">
+                                       <children>
+                                          <HBox alignment="CENTER_LEFT" prefHeight="59.0" prefWidth="410.0">
+                                             <children>
+                                                <Label alignment="CENTER_RIGHT" prefHeight="59.0" prefWidth="186.0" text="Customer Account :">
+                                                   <font>
+                                                      <Font name="Arial Bold" size="16.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER_LEFT" prefHeight="59.0" prefWidth="410.0">
+                                             <children>
+                                                <Label alignment="CENTER_RIGHT" prefHeight="89.0" prefWidth="128.0" text="Customer :">
+                                                   <font>
+                                                      <Font name="Arial Bold" size="14.0" />
+                                                   </font>
+                                                </Label>
+                                                <ComboBox fx:id="cbReportCustomerName" prefHeight="40.0" prefWidth="250.0" styleClass="txt-rounded-background">
+                                                   <HBox.margin>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </HBox.margin>
+                                                </ComboBox>
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER_LEFT" prefHeight="59.0" prefWidth="410.0">
+                                             <children>
+                                                <Label alignment="CENTER_RIGHT" prefHeight="89.0" prefWidth="128.0" text="Currency :">
+                                                   <font>
+                                                      <Font name="Arial Bold" size="14.0" />
+                                                   </font>
+                                                </Label>
+                                                <ComboBox fx:id="cbReportCurrencyName" prefHeight="40.0" prefWidth="250.0" styleClass="txt-rounded-background">
+                                                   <HBox.margin>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </HBox.margin>
+                                                </ComboBox>
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER" prefHeight="51.0" prefWidth="409.0">
+                                             <children>
+                                                <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#showCustomerReportPerCurrency" prefHeight="60.0" prefWidth="383.0" styleClass="btn-save" stylesheets="@style/style.css" text="Customer Balance Per Currency">
+                                                   <HBox.margin>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </HBox.margin>
+                                                   <font>
+                                                      <Font name="Arial" size="14.0" />
+                                                   </font>
+                                                   <graphic>
+                                                      <FontAwesomeIcon iconName="PRINT" size="25" styleClass="icon" />
+                                                   </graphic>
+                                                   
+                                                </Button>
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER" prefHeight="45.0" prefWidth="409.0">
+                                             <children>
+                                                <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#showCustomerTotalReport" prefHeight="60.0" prefWidth="383.0" styleClass="btn-update" stylesheets="@style/style.css" text="Customer Total Balance">
+                                                   <HBox.margin>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </HBox.margin>
+                                                   <font>
+                                                      <Font name="Arial" size="14.0" />
+                                                   </font>
+                                                   <graphic>
+                                                      <FontAwesomeIcon iconName="USER" size="25" styleClass="icon" />
+                                                   </graphic>
+                                                   
+                                                </Button>
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                           </children></AnchorPane>
                     </content>
                   </Tab>
               </tabs>

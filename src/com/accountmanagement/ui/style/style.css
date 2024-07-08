@@ -60,3 +60,28 @@
 .txt-rounded-background {
     -fx-background-radius: 20px;
 }
+
+.hbox-bordered {
+    -fx-border-color: #EEE;
+    -fx-border-style: solid;
+    -fx-border-width: 2px;
+}
+
+.btn-add {
+    -fx-background-color: #640D6B;
+    -fx-text-fill: white;
+}
+
+.btn-add:hover {
+    -fx-background-color: #B51B75;
+}
+
+
+.btn-open {
+    -fx-background-color: #9B4444;
+    -fx-text-fill: white;
+}
+
+.btn-open:hover {
+    -fx-background-color: #C68484;
+}

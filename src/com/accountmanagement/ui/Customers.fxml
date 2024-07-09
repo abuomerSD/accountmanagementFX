@@ -301,7 +301,7 @@
                                                       <Font name="Arial Bold" size="14.0" />
                                                    </font>
                                                 </Label>
-                                                <TextField fx:id="txtCurrencyNameSearch" prefHeight="40.0" prefWidth="250.0" promptText="Currency Name" styleClass="txt-rounded-background">
+                                                <TextField fx:id="txtCurrencyNameSearch" onKeyReleased="#filterCurrencyTable" prefHeight="40.0" prefWidth="250.0" promptText="Currency Name" styleClass="txt-rounded-background">
                                                    <font>
                                                       <Font name="Arial Bold" size="14.0" />
                                                    </font>
@@ -500,7 +500,7 @@
                                                       <Font name="Arial Bold" size="14.0" />
                                                    </font>
                                                 </Label>
-                                                <TextField fx:id="txtInDocIdSearch" prefHeight="40.0" prefWidth="250.0" promptText="Document ID" styleClass="txt-rounded-background">
+                                                <TextField fx:id="txtInDocIdSearch" onKeyReleased="#filterInDocTable" prefHeight="40.0" prefWidth="250.0" promptText="Document ID" styleClass="txt-rounded-background">
                                                    <font>
                                                       <Font name="Arial Bold" size="14.0" />
                                                    </font>
@@ -520,7 +520,7 @@
                                                     <TableColumn fx:id="colInDocId" prefWidth="75.0" text="ID" />
                                                     <TableColumn fx:id="colInDocDate" prefWidth="83.0" text="Date" />
                                                       <TableColumn fx:id="colInDocCustomerName" prefWidth="123.0" text="Customer Name" />
-                                                      <TableColumn fx:id="colInDocIdCurrencyName" prefWidth="96.0" text="Currency" />
+                                                      <TableColumn fx:id="colInDocCurrencyName" prefWidth="96.0" text="Currency" />
                                                       <TableColumn fx:id="colInDocValue" prefWidth="101.0" text="Value" />
                                                       <TableColumn fx:id="colInDocComment" prefWidth="169.0" text="Comment" />
                                                   </columns>
@@ -705,7 +705,7 @@
                                                       <Font name="Arial Bold" size="14.0" />
                                                    </font>
                                                 </Label>
-                                                <TextField fx:id="txtOutDocIdSearch" prefHeight="40.0" prefWidth="250.0" promptText="Document ID" styleClass="txt-rounded-background">
+                                                <TextField fx:id="txtOutDocIdSearch" onKeyReleased="#filterOutDocTable" prefHeight="40.0" prefWidth="250.0" promptText="Document ID" styleClass="txt-rounded-background">
                                                    <font>
                                                       <Font name="Arial Bold" size="14.0" />
                                                    </font>

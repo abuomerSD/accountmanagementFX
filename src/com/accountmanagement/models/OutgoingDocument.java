@@ -9,18 +9,32 @@ public class OutgoingDocument {
     private int customerId;
     private double value;
     private String comment;
+    private String customerName;
+    private String currencyName;
 
     public OutgoingDocument() {
     }
 
-    public OutgoingDocument(long id, String date, int currencyId, int customerId, double value, String comment) {
+    public OutgoingDocument(long id, String date, int currencyId, int customerId, double value, String comment, String customerName, String currencyName) {
         this.id = id;
         this.date = date;
         this.currencyId = currencyId;
         this.customerId = customerId;
         this.value = value;
         this.comment = comment;
+        this.customerName = customerName;
+        this.currencyName = currencyName;
     }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public String getCurrencyName() {
+        return currencyName;
+    }
+
+    
 
     public long getId() {
         return id;

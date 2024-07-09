@@ -9,6 +9,8 @@ public class OutgoingDocumentBuilder {
     private int customerId;
     private double value;
     private String comment;
+    private String customerName;
+    private String currencyName;
     
     public OutgoingDocumentBuilder id(long id) {
         this.id = id;
@@ -41,9 +43,19 @@ public class OutgoingDocumentBuilder {
         return this;
     }
     
+    public OutgoingDocumentBuilder customerName(String customerName) {
+        this.customerName = customerName;
+        return this;
+    }
+    
+    public OutgoingDocumentBuilder currencyName(String currencyName) {
+        this.currencyName = currencyName;
+        return this;
+    }
+    
     
     public OutgoingDocument build() {
-        return new OutgoingDocument(id, date, currencyId, customerId, value, comment);
+        return new OutgoingDocument(id, date, currencyId, customerId, value, comment, customerName, currencyName);
     }
     
     

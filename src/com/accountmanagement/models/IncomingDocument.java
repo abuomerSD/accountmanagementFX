@@ -1,8 +1,6 @@
 
 package com.accountmanagement.models;
 
-import java.time.LocalDateTime;
-
 public class IncomingDocument {
     private long id;
     private String date;
@@ -10,18 +8,40 @@ public class IncomingDocument {
     private int customerId;
     private double value;
     private String comment;
+    private String customerName;
+    private String currencyName;
 
     public IncomingDocument() {
     }
 
-    public IncomingDocument(long id, String date, int currencyId, int customerId, double value, String comment) {
+    public IncomingDocument(long id, String date, int currencyId, int customerId, double value, String comment, String customerName, String currencyName) {
         this.id = id;
         this.date = date;
         this.currencyId = currencyId;
         this.customerId = customerId;
         this.value = value;
         this.comment = comment;
+        this.customerName = customerName;
+        this.currencyName = currencyName;
     }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public String getCurrencyName() {
+        return currencyName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public void setCurrencyName(String currencyName) {
+        this.currencyName = currencyName;
+    }
+
+    
 
     public long getId() {
         return id;

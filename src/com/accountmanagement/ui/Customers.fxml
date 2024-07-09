@@ -517,12 +517,12 @@
                                              <children>
                                                 <TableView fx:id="tbInDoc" editable="true" prefHeight="450.0" prefWidth="650.0" tableMenuButtonVisible="true">
                                                   <columns>
-                                                    <TableColumn prefWidth="75.0" text="ID" />
-                                                    <TableColumn prefWidth="83.0" text="Date" />
-                                                      <TableColumn prefWidth="123.0" text="Customer Name" />
-                                                      <TableColumn prefWidth="96.0" text="Currency" />
-                                                      <TableColumn prefWidth="101.0" text="Value" />
-                                                      <TableColumn prefWidth="169.0" text="Comment" />
+                                                    <TableColumn fx:id="colInDocId" prefWidth="75.0" text="ID" />
+                                                    <TableColumn fx:id="colInDocDate" prefWidth="83.0" text="Date" />
+                                                      <TableColumn fx:id="colInDocCustomerName" prefWidth="123.0" text="Customer Name" />
+                                                      <TableColumn fx:id="colInDocIdCurrencyName" prefWidth="96.0" text="Currency" />
+                                                      <TableColumn fx:id="colInDocValue" prefWidth="101.0" text="Value" />
+                                                      <TableColumn fx:id="colInDocComment" prefWidth="169.0" text="Comment" />
                                                   </columns>
                                                    <HBox.margin>
                                                       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

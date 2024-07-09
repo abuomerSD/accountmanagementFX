@@ -4,11 +4,13 @@ package com.accountmanagement.repositories.customer;
 import com.accountmanagement.database.DbConnection;
 import com.accountmanagement.models.Customer;
 import com.accountmanagement.models.CustomerBuilder;
+import com.accountmanagement.utils.AlertMaker;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.JOptionPane;
 
 public class CustomerSqliteRepository implements CustomerRepository {
@@ -206,5 +208,20 @@ public class CustomerSqliteRepository implements CustomerRepository {
         
         return customer;
     }
+    
+    public HashMap<String, Integer> getCustomerMap() {
+        HashMap<String, Integer> map = new HashMap<>();
+        try {
+            ArrayList<Customer> list = findAll();
+            
+            
+            list.forEach(customer -> map.put(customer.getName(), customer.getId()));
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertMaker.showErrorALert(e.toString());
+        }
+        return map;
+    }
+    
     
 }

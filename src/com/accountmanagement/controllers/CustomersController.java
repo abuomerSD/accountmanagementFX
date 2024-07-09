@@ -3,12 +3,17 @@ package com.accountmanagement.controllers;
 
 import com.accountmanagement.models.Currency;
 import com.accountmanagement.models.Customer;
+import com.accountmanagement.models.IncomingDocument;
 import com.accountmanagement.repositories.currency.CurrencySqliteRepository;
 import com.accountmanagement.repositories.customer.CustomerSqliteRepository;
+import com.accountmanagement.repositories.incomingdocument.IncomingDocumentSqliteRepository;
 import com.accountmanagement.utils.AlertMaker;
 import com.accountmanagement.utils.NotificationMaker;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
@@ -32,8 +37,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 public class CustomersController implements Initializable {
     
     
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMMM-yyyy");
     CustomerSqliteRepository customerRepo = new CustomerSqliteRepository();
     CurrencySqliteRepository currencyRepo = new CurrencySqliteRepository();
+    IncomingDocumentSqliteRepository inDocRepo = new IncomingDocumentSqliteRepository();
     
 
     @FXML
@@ -102,12 +109,27 @@ public class CustomersController implements Initializable {
     private TableColumn<Currency, Integer> colCurrencyId;
     @FXML
     private TableColumn<Currency, String> colCurrencyName;
+    @FXML
+    private TableColumn<?, ?> colInDocId;
+    @FXML
+    private TableColumn<IncomingDocument, String> colInDocDate;
+    @FXML
+    private TableColumn<Object, String> colInDocCustomerName;
+    @FXML
+    private TableColumn<?, ?> colInDocIdCurrencyName;
+    @FXML
+    private TableColumn<?, ?> colInDocValue;
+    @FXML
+    private TableColumn<?, ?> colInDocComment;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        // set dates
+        setDates();
+        
         // set tables data
         fillCustomerTable();
         fillCurrencyTable();
@@ -414,6 +436,66 @@ public class CustomersController implements Initializable {
 
     @FXML
     private void saveIncomingDocument(ActionEvent event) {
+        try {
+            // validation
+            if(txtInDocDate.getValue() == null) {
+                AlertMaker.showErrorALert("Choose Date");
+                return;
+            }
+            
+            if(cbInDocCustomerName.getSelectionModel().getSelectedItem().isEmpty()){
+                AlertMaker.showErrorALert("Choose Customer");
+                return;
+            }
+            
+            if(cbInDocCurrencyName.getSelectionModel().getSelectedItem().isEmpty()){
+                AlertMaker.showErrorALert("Choose Currency");
+                return;
+            }
+            
+            if(txtInDocValue.getText().isEmpty()) {
+                AlertMaker.showErrorALert("Enter Document Value");
+                return;
+            }
+            
+            if(Double.valueOf(txtInDocValue.getText()) <= 0) {
+                AlertMaker.showErrorALert("Document Value Must Be > 0");
+                return;
+            }
+            
+            String date = dateFormat.format(txtInDocDate.getValue());
+            String customerName = cbInDocCustomerName.getSelectionModel().getSelectedItem();
+            String currencyName = cbInDocCurrencyName.getSelectionModel().getSelectedItem();
+            double value = Double.valueOf(txtInDocValue.getText());
+            String comment = txtInDocComment.getText();
+            
+            HashMap<String, Integer> customersMap = customerRepo.getCustomerMap();
+            HashMap<String, Integer> currencysMap = currencyRepo.getCurrencyMap();
+            
+            int customerId = customersMap.get(customerName);
+            int currencyId = currencysMap.get(currencyName);
+            
+            IncomingDocument incomingDocument = IncomingDocument.builder()
+                    .date(date)
+                    .customerId(customerId)
+                    .currencyId(currencyId)
+                    .value(value)
+                    .comment(comment)
+                    .build();
+            
+            int inDocId = inDocRepo.save(incomingDocument);
+            
+            if(inDocId > 0) {
+                fillInDocTable();
+                lbInDocStatus.setText("Document Saved with Id : "+ inDocId);
+                NotificationMaker.showInformation("Document Saved with Id : "+ inDocId);
+                
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertMaker.showErrorALert(e.toString());
+        }
     }
 
     @FXML
@@ -498,4 +580,36 @@ public class CustomersController implements Initializable {
             AlertMaker.showErrorALert(e.toString());
         }
     }
+    
+    void setDates() {
+        try {
+            txtInDocDate.setValue(LocalDate.now());
+            txtOutDocDate.setValue(LocalDate.now());
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertMaker.showErrorALert(e.toString());
+        }
+        
+    }
+
+    private void fillInDocTable() {
+        try {
+            ArrayList<IncomingDocument> list = inDocRepo.findAllDesc();
+            ObservableList ob = FXCollections.observableArrayList(list);
+            
+            colInDocDate.setCellValueFactory(new PropertyValueFactory<IncomingDocument, String>("date"));
+//            colInDocCustomerName.setCellValueFactory(new PropertyValueFactory<Object, String>());
+            colInDocDate.setCellValueFactory(new PropertyValueFactory<IncomingDocument, String>("date"));
+            colInDocDate.setCellValueFactory(new PropertyValueFactory<IncomingDocument, String>("date"));
+            colInDocDate.setCellValueFactory(new PropertyValueFactory<IncomingDocument, String>("date"));
+            colInDocDate.setCellValueFactory(new PropertyValueFactory<IncomingDocument, String>("date"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertMaker.showErrorALert(e.toString());
+        }
+    }
+    
+    
+    
+    
 }

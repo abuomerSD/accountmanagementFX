@@ -3,10 +3,12 @@ package com.accountmanagement.repositories.currency;
 
 import com.accountmanagement.database.DbConnection;
 import com.accountmanagement.models.Currency;
+import com.accountmanagement.utils.AlertMaker;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.JOptionPane;
 
 public class CurrencySqliteRepository implements CurrencyRepository {
@@ -169,6 +171,20 @@ public class CurrencySqliteRepository implements CurrencyRepository {
         }
         
         return currency;
+    }
+    
+    public HashMap<String, Integer> getCurrencyMap() {
+        HashMap<String, Integer> map = new HashMap<>();
+        try {
+            ArrayList<Currency> list = findAll();
+            
+            
+            list.forEach(currency -> map.put(currency.getName(), currency.getId()));
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertMaker.showErrorALert(e.toString());
+        }
+        return map;
     }
     
 }

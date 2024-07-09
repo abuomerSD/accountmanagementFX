@@ -3,6 +3,7 @@ package com.accountmanagement.controllers;
 
 import com.accountmanagement.models.Currency;
 import com.accountmanagement.models.Customer;
+import com.accountmanagement.repositories.currency.CurrencySqliteRepository;
 import com.accountmanagement.repositories.customer.CustomerSqliteRepository;
 import com.accountmanagement.utils.AlertMaker;
 import com.accountmanagement.utils.NotificationMaker;
@@ -29,6 +30,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 
 public class CustomersController implements Initializable {
+    
+    
+    CustomerSqliteRepository customerRepo = new CustomerSqliteRepository();
+    CurrencySqliteRepository currencyRepo = new CurrencySqliteRepository();
+    
 
     @FXML
     private TextField txtCustomerName;
@@ -47,7 +53,7 @@ public class CustomersController implements Initializable {
     @FXML
     private TableColumn<Customer, String> colCustomerPhone;
     
-    CustomerSqliteRepository customerRepo = new CustomerSqliteRepository();
+    
     @FXML
     private TextField txtCurrencyName;
     @FXML
@@ -92,6 +98,10 @@ public class CustomersController implements Initializable {
     private ComboBox<String> cbReportCustomerName;
     @FXML
     private ComboBox<String> cbReportCurrencyName;
+    @FXML
+    private TableColumn<Currency, Integer> colCurrencyId;
+    @FXML
+    private TableColumn<Currency, String> colCurrencyName;
 
     /**
      * Initializes the controller class.
@@ -100,6 +110,10 @@ public class CustomersController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // set tables data
         fillCustomerTable();
+        fillCurrencyTable();
+        
+        // set cb's data
+        setAllCbsCustomerName();
         
         // table selection listener
         
@@ -118,6 +132,18 @@ public class CustomersController implements Initializable {
                     e.printStackTrace();
                     AlertMaker.showErrorALert(e.toString());
                 }
+            }
+            
+        });
+        
+        tbCurrency.getFocusModel().focusedCellProperty().addListener(new ChangeListener<TablePosition>() {
+            @Override
+            public void changed(ObservableValue<? extends TablePosition> observable, TablePosition oldValue, TablePosition newValue) {
+                Currency currency = tbCurrency.getSelectionModel().getSelectedItem();
+                
+                if(currency == null) return;
+                
+                txtCurrencyName.setText(currency.getName());
             }
             
         });
@@ -147,6 +173,7 @@ public class CustomersController implements Initializable {
                     .build();
             
             if(customerRepo.save(customer)) {
+                setAllCbsCustomerName();        
                 fillCustomerTable();
                 clearCustomerTf();
                 txtCustomerName.requestFocus();
@@ -195,6 +222,7 @@ public class CustomersController implements Initializable {
             
             if(response.get() == ButtonType.OK) {
                 if(customerRepo.update(newCustomer)) {
+                    setAllCbsCustomerName();
                     fillCustomerTable();
                     clearCustomerTf();
                     txtCustomerName.requestFocus();
@@ -224,6 +252,7 @@ public class CustomersController implements Initializable {
             
             if(response.get() == ButtonType.OK) {
                 if(customerRepo.delete(customer.getId())) {
+                    setAllCbsCustomerName();
                     fillCustomerTable();
                     clearCustomerTf();
                     txtCustomerName.requestFocus();
@@ -284,14 +313,103 @@ public class CustomersController implements Initializable {
 
     @FXML
     private void saveCurrency(ActionEvent event) {
+        try {
+            // validation 
+            
+            if(txtCurrencyName.getText().isEmpty()) {
+                AlertMaker.showErrorALert("Enter Currency Name");
+                return;
+            }
+            
+            String currencyName = txtCurrencyName.getText();
+            
+            Currency currency = Currency.builder().name(currencyName).build();
+            
+            if(currencyRepo.save(currency)) {
+                fillCurrencyTable();
+                txtCurrencyName.requestFocus();
+                txtCurrencyName.clear();
+                setAllCbsCurrencyName();
+                lbCurrencyStatus.setText(currency.getName() + " saved");
+                NotificationMaker.showInformation(currency.getName() + " saved");
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
     private void updateCurrency(ActionEvent event) {
+        try {
+            
+            Currency currency = tbCurrency.getSelectionModel().getSelectedItem();
+            
+            // validation 
+            
+            if(currency == null) {
+                AlertMaker.showErrorALert("Choose Currency");
+                return;
+            }
+            
+            if(txtCurrencyName.getText().isEmpty()) {
+                AlertMaker.showErrorALert("Enter Currency Name");
+                return;
+            }
+            
+            
+            
+            String currencyName = txtCurrencyName.getText();
+            
+            Currency newCurrency = Currency.builder().id(currency.getId()).name(currencyName).build();
+            
+            Optional<ButtonType> result = AlertMaker.showConfirmationAlert("update " + currency.getName() + " ?");
+            
+            if(!(result.get() == ButtonType.OK)) {
+                return;
+            }
+            
+            if(currencyRepo.update(newCurrency)) {
+                fillCurrencyTable();
+                txtCurrencyName.requestFocus();
+                txtCurrencyName.clear();
+                setAllCbsCurrencyName();
+                lbCurrencyStatus.setText(currency.getName() + " updated");
+                NotificationMaker.showInformation(currency.getName() + " updated");
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
     private void deleteCurrency(ActionEvent event) {
+        try {
+            Currency currency = tbCurrency.getSelectionModel().getSelectedItem();
+            
+            // validation
+            
+            if(currency == null) {
+                AlertMaker.showErrorALert("Choose Currency");
+            }
+            
+            Optional<ButtonType> result = AlertMaker.showConfirmationAlert("delete " + currency.getName() + " ?");
+            
+            if(!(result.get() == ButtonType.OK)) {
+                return;
+            }
+            
+            if(currencyRepo.delete(currency.getId())) {
+                fillCurrencyTable();
+                setAllCbsCurrencyName();
+                lbCurrencyStatus.setText(currency.getName() + " deleted");
+                NotificationMaker.showInformation(currency.getName() + " deleted");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertMaker.showErrorALert(e.toString());
+        }
     }
 
     @FXML
@@ -320,5 +438,64 @@ public class CustomersController implements Initializable {
 
     @FXML
     private void showCustomerTotalReport(ActionEvent event) {
+    }
+
+    private void setAllCbsCustomerName() {
+        try {
+            ArrayList<Customer> list = customerRepo.findAll();
+            ObservableList<String> obList = FXCollections.observableArrayList();
+                
+            list.forEach(customer -> obList.add(customer.getName()));
+            
+            // remove old values
+            
+            cbInDocCustomerName.getItems().clear();
+            cbOutDocCustomerName.getItems().clear();
+            cbReportCustomerName.getItems().clear();
+            
+            cbInDocCustomerName.getItems().addAll(obList);
+            cbOutDocCustomerName.getItems().addAll(obList);
+            cbReportCustomerName.getItems().addAll(obList);
+        } catch(Exception e) {
+            e.printStackTrace();
+            AlertMaker.showErrorALert(e.toString());
+        }
+    }
+
+    private void fillCurrencyTable() {
+        try {
+            ArrayList<Currency> list = currencyRepo.findAll();
+            ObservableList<Currency> obList = FXCollections.observableArrayList(list);
+            
+            colCurrencyId.setCellValueFactory(new PropertyValueFactory<Currency, Integer>("id"));
+            colCurrencyName.setCellValueFactory(new PropertyValueFactory<Currency, String>("name"));
+            
+            tbCurrency.setItems(obList);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertMaker.showErrorALert(e.toString());
+        }
+    }
+
+    private void setAllCbsCurrencyName() {
+        try {
+            ArrayList<Currency> list = currencyRepo.findAll();
+            ObservableList<String> obList = FXCollections.observableArrayList();
+            
+            list.forEach(currency -> obList.add(currency.getName()));
+            
+            cbInDocCurrencyName.getItems().clear();
+            cbOutDocCurrencyName.getItems().clear();
+            cbReportCurrencyName.getItems().clear();
+            
+            cbInDocCurrencyName.getItems().addAll(obList);
+            cbOutDocCurrencyName.getItems().addAll(obList);
+            cbReportCurrencyName.getItems().addAll(obList);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertMaker.showErrorALert(e.toString());
+        }
     }
 }

@@ -175,7 +175,7 @@
                                              <children>
                                                 <HBox prefHeight="450.0" prefWidth="650.0">
                                                    <children>
-                                                      <TableView fx:id="tbCustomer" prefHeight="450.0" prefWidth="650.0">
+                                                      <TableView fx:id="tbCustomer" editable="true" prefHeight="450.0" prefWidth="650.0" tableMenuButtonVisible="true">
                                                         <columns>
                                                           <TableColumn fx:id="colCustomerId" prefWidth="75.0" text="ID" />
                                                           <TableColumn fx:id="colCustomerName" prefWidth="324.0" text="Customer Name" />
@@ -316,10 +316,10 @@
                                           </HBox>
                                           <HBox alignment="CENTER" prefHeight="450.0" prefWidth="662.0">
                                              <children>
-                                                <TableView fx:id="tbCurrency" prefHeight="450.0" prefWidth="578.0">
+                                                <TableView fx:id="tbCurrency" editable="true" prefHeight="450.0" prefWidth="578.0" tableMenuButtonVisible="true">
                                                   <columns>
-                                                    <TableColumn prefWidth="75.0" text="ID" />
-                                                    <TableColumn prefWidth="501.0" text="Currency Name" />
+                                                    <TableColumn fx:id="colCurrencyId" prefWidth="75.0" text="ID" />
+                                                    <TableColumn fx:id="colCurrencyName" prefWidth="501.0" text="Currency Name" />
                                                   </columns>
                                                 </TableView>
                                              </children>
@@ -515,7 +515,7 @@
                                           </HBox>
                                           <HBox prefHeight="450.0" prefWidth="650.0">
                                              <children>
-                                                <TableView fx:id="tbInDoc" prefHeight="450.0" prefWidth="650.0">
+                                                <TableView fx:id="tbInDoc" editable="true" prefHeight="450.0" prefWidth="650.0" tableMenuButtonVisible="true">
                                                   <columns>
                                                     <TableColumn prefWidth="75.0" text="ID" />
                                                     <TableColumn prefWidth="83.0" text="Date" />
@@ -720,7 +720,7 @@
                                           </HBox>
                                           <HBox prefHeight="450.0" prefWidth="650.0">
                                              <children>
-                                                <TableView fx:id="tbOutDoc" prefHeight="450.0" prefWidth="650.0">
+                                                <TableView fx:id="tbOutDoc" editable="true" prefHeight="450.0" prefWidth="650.0" tableMenuButtonVisible="true">
                                                    <columns>
                                                       <TableColumn prefWidth="75.0" text="ID" />
                                                       <TableColumn prefWidth="83.0" text="Date" />

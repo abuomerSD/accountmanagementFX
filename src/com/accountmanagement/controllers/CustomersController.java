@@ -791,7 +791,12 @@ public class CustomersController implements Initializable {
     @FXML
     private void filterCurrencyTable(KeyEvent event) {
         try {
+            String currencyName = txtCurrencyNameSearch.getText();
             
+            ArrayList<Currency> list = currencyRepo.filterCurrencyByName(currencyName);
+            ObservableList<Currency> ob = FXCollections.observableArrayList(list);
+            
+            tbCurrency.setItems(ob);
         } catch (Exception e) {
             e.printStackTrace();
             AlertMaker.showErrorALert(e.toString());

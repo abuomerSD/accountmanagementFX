@@ -12,5 +12,6 @@ public interface CurrencyRepository {
     Currency findById(int id);
     Currency findByName(String name);
     ArrayList<Currency> findAll();
+    ArrayList<Currency> filterCurrencyByName(String name);
     
 }

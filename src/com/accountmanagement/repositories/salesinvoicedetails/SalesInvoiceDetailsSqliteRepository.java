@@ -3,11 +3,11 @@ package com.accountmanagement.repositories.salesinvoicedetails;
 
 import com.accountmanagement.database.DbConnection;
 import com.accountmanagement.models.SalesInvoiceDetails;
+import com.accountmanagement.utils.AlertMaker;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import javax.swing.JOptionPane;
 
 
 public class SalesInvoiceDetailsSqliteRepository implements SalesInvoiceDetailsRepository{
@@ -34,7 +34,7 @@ public class SalesInvoiceDetailsSqliteRepository implements SalesInvoiceDetailsR
             
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return false;
@@ -59,7 +59,7 @@ public class SalesInvoiceDetailsSqliteRepository implements SalesInvoiceDetailsR
             }
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e);
+            AlertMaker.showErrorALert(e.toString());
         }
         return false;
     }
@@ -93,7 +93,7 @@ public class SalesInvoiceDetailsSqliteRepository implements SalesInvoiceDetailsR
             
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e);
+            AlertMaker.showErrorALert(e.toString());
         }
         return list;
     }
@@ -127,7 +127,7 @@ public class SalesInvoiceDetailsSqliteRepository implements SalesInvoiceDetailsR
             
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e);
+            AlertMaker.showErrorALert(e.toString());
         }
         return list;
     }

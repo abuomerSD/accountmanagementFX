@@ -3,6 +3,7 @@ package com.accountmanagement.repositories.accountmovement;
 
 import com.accountmanagement.database.DbConnection;
 import com.accountmanagement.models.AccountMovement;
+import com.accountmanagement.utils.AlertMaker;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -38,7 +39,7 @@ public class AccountMovementSqliteRepository implements AccountMovementRepositor
             
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "Error", 0);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return false;
@@ -69,7 +70,7 @@ public class AccountMovementSqliteRepository implements AccountMovementRepositor
             
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "Error", 0);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return false;
@@ -95,7 +96,7 @@ public class AccountMovementSqliteRepository implements AccountMovementRepositor
             
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "Error", 0);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return false;
@@ -129,7 +130,7 @@ public class AccountMovementSqliteRepository implements AccountMovementRepositor
             
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "Error", 0);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return list;
@@ -169,7 +170,7 @@ public class AccountMovementSqliteRepository implements AccountMovementRepositor
             
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "Error", 0);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return list;
@@ -215,7 +216,7 @@ public class AccountMovementSqliteRepository implements AccountMovementRepositor
             
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "Error", 0);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return balance;

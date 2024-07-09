@@ -4,6 +4,7 @@ package com.accountmanagement.repositories.sCustomer;
 import com.accountmanagement.database.DbConnection;
 import com.accountmanagement.models.Customer;
 import com.accountmanagement.models.CustomerBuilder;
+import com.accountmanagement.utils.AlertMaker;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -32,7 +33,7 @@ public class ScustomerSqliteRepository implements ScustomerRepository{
             
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "خطأ", 0);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         
@@ -59,7 +60,7 @@ public class ScustomerSqliteRepository implements ScustomerRepository{
             }
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "خطأ", 0);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return false; 
@@ -82,7 +83,7 @@ public class ScustomerSqliteRepository implements ScustomerRepository{
             }
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "خطأ", 0);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return false;
@@ -111,7 +112,7 @@ public class ScustomerSqliteRepository implements ScustomerRepository{
             
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "Error", 0);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return customer;
@@ -139,7 +140,7 @@ public class ScustomerSqliteRepository implements ScustomerRepository{
             }
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "خطأ", 0);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return list;
@@ -171,7 +172,7 @@ public class ScustomerSqliteRepository implements ScustomerRepository{
             
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "Error", 0);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return list;
@@ -202,7 +203,7 @@ public class ScustomerSqliteRepository implements ScustomerRepository{
             }
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "Error", 0);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return customer;

@@ -3,12 +3,12 @@ package com.accountmanagement.repositories.salesinvoiceheader;
 
 import com.accountmanagement.database.DbConnection;
 import com.accountmanagement.models.SalesInvoiceHeader;
+import com.accountmanagement.utils.AlertMaker;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
-import javax.swing.JOptionPane;
 
 public class SalesInvoiceHeaderSqliteRepository implements SalesInvoiceHeaderRepository{
 
@@ -41,7 +41,7 @@ public class SalesInvoiceHeaderSqliteRepository implements SalesInvoiceHeaderRep
             
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return 0;
@@ -73,7 +73,7 @@ public class SalesInvoiceHeaderSqliteRepository implements SalesInvoiceHeaderRep
             
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e);
+            AlertMaker.showErrorALert(e.toString());
         }
         return false;
     }
@@ -96,7 +96,7 @@ public class SalesInvoiceHeaderSqliteRepository implements SalesInvoiceHeaderRep
             
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return false;
@@ -132,7 +132,7 @@ public class SalesInvoiceHeaderSqliteRepository implements SalesInvoiceHeaderRep
             }
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return invoiceHeader;
@@ -165,7 +165,7 @@ public class SalesInvoiceHeaderSqliteRepository implements SalesInvoiceHeaderRep
             }
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return list;
@@ -198,7 +198,7 @@ public class SalesInvoiceHeaderSqliteRepository implements SalesInvoiceHeaderRep
             }
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return list;
@@ -234,7 +234,7 @@ public class SalesInvoiceHeaderSqliteRepository implements SalesInvoiceHeaderRep
             }
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return list;
@@ -270,7 +270,7 @@ public class SalesInvoiceHeaderSqliteRepository implements SalesInvoiceHeaderRep
             }
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return list;

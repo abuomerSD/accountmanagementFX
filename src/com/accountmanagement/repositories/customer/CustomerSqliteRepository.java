@@ -33,7 +33,7 @@ public class CustomerSqliteRepository implements CustomerRepository {
             
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "خطأ", 0);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         
@@ -60,7 +60,7 @@ public class CustomerSqliteRepository implements CustomerRepository {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "خطأ", 0);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return false; 
@@ -83,7 +83,7 @@ public class CustomerSqliteRepository implements CustomerRepository {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "خطأ", 0);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return false;
@@ -112,7 +112,7 @@ public class CustomerSqliteRepository implements CustomerRepository {
             
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "Error", 0);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return customer;
@@ -140,7 +140,7 @@ public class CustomerSqliteRepository implements CustomerRepository {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "خطأ", 0);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return list;
@@ -172,7 +172,7 @@ public class CustomerSqliteRepository implements CustomerRepository {
             
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "Error", 0);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return list;
@@ -203,7 +203,7 @@ public class CustomerSqliteRepository implements CustomerRepository {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "Error", 0);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return customer;

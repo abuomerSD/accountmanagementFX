@@ -9,7 +9,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
-import javax.swing.JOptionPane;
 
 public class CurrencySqliteRepository implements CurrencyRepository {
 
@@ -32,7 +31,7 @@ public class CurrencySqliteRepository implements CurrencyRepository {
             
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "Error", 0);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return false;
@@ -58,7 +57,7 @@ public class CurrencySqliteRepository implements CurrencyRepository {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "Error", 0);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return false;
@@ -81,7 +80,7 @@ public class CurrencySqliteRepository implements CurrencyRepository {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "Error", 0);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return false;
@@ -108,7 +107,7 @@ public class CurrencySqliteRepository implements CurrencyRepository {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "Error", 0);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return currency;
@@ -138,7 +137,7 @@ public class CurrencySqliteRepository implements CurrencyRepository {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "Error", 0);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return list;
@@ -167,7 +166,7 @@ public class CurrencySqliteRepository implements CurrencyRepository {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "Error", 0);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return currency;
@@ -187,4 +186,34 @@ public class CurrencySqliteRepository implements CurrencyRepository {
         return map;
     }
     
+    
+    @Override
+    public ArrayList<Currency> filterCurrencyByName(String name) {
+        ArrayList<Currency> list = new ArrayList(); 
+        String sql = "SELECT * FROM tb_currency WHERE Name LIKE '%" + name + "%';";
+        
+        try {
+            Connection con = DbConnection.getConnection();
+            PreparedStatement ps = con.prepareStatement(sql);
+            
+            
+            
+            System.out.println(ps.toString());
+            
+            ResultSet rs = ps.executeQuery();
+            
+            while(rs.next()){
+                Currency currency = Currency.builder()
+                        .id(rs.getInt("Id"))
+                        .name(rs.getString("Name"))
+                        .build();
+                list.add(currency);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertMaker.showErrorALert(e.toString());
+        }
+        
+        return list;
+    }
 }

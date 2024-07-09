@@ -3,14 +3,12 @@ package com.accountmanagement.repositories.incomingdocument;
 
 import com.accountmanagement.database.DbConnection;
 import com.accountmanagement.models.IncomingDocument;
+import com.accountmanagement.utils.AlertMaker;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
 import javax.swing.JOptionPane;
 
 
@@ -47,7 +45,7 @@ public class IncomingDocumentSqliteRepository implements IncomingDocumentReposit
             
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "Error", 0);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return generatedKey;
@@ -74,7 +72,7 @@ public class IncomingDocumentSqliteRepository implements IncomingDocumentReposit
             }
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "Error", 0);
+            AlertMaker.showErrorALert(e.toString());
         }
        
        return false;
@@ -97,7 +95,7 @@ public class IncomingDocumentSqliteRepository implements IncomingDocumentReposit
             }
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "Error", 0);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return false;
@@ -134,7 +132,7 @@ public class IncomingDocumentSqliteRepository implements IncomingDocumentReposit
             
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "Error", 0);
+            AlertMaker.showErrorALert(e.toString());
         }
         return document;
     }
@@ -166,7 +164,7 @@ public class IncomingDocumentSqliteRepository implements IncomingDocumentReposit
             }
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "Error", 0);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return list;
@@ -199,7 +197,7 @@ public class IncomingDocumentSqliteRepository implements IncomingDocumentReposit
             }
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "Error", 0);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return list;
@@ -232,7 +230,7 @@ public class IncomingDocumentSqliteRepository implements IncomingDocumentReposit
             }
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "Error", 0);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return list;

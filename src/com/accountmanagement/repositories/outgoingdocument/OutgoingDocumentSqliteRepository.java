@@ -2,8 +2,8 @@
 package com.accountmanagement.repositories.outgoingdocument;
 
 import com.accountmanagement.database.DbConnection;
-import com.accountmanagement.models.IncomingDocument;
 import com.accountmanagement.models.OutgoingDocument;
+import com.accountmanagement.utils.AlertMaker;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -44,7 +44,7 @@ public class OutgoingDocumentSqliteRepository implements OutgoingDocumentReposit
             
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "Error", 0);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return generatedKey;
@@ -71,7 +71,7 @@ public class OutgoingDocumentSqliteRepository implements OutgoingDocumentReposit
             }
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "Error", 0);
+            AlertMaker.showErrorALert(e.toString());
         }
        
        return false;
@@ -94,7 +94,7 @@ public class OutgoingDocumentSqliteRepository implements OutgoingDocumentReposit
             }
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "Error", 0);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return false;
@@ -131,7 +131,7 @@ public class OutgoingDocumentSqliteRepository implements OutgoingDocumentReposit
             
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "Error", 0);
+            AlertMaker.showErrorALert(e.toString());
         }
         return document;
     }
@@ -163,7 +163,7 @@ public class OutgoingDocumentSqliteRepository implements OutgoingDocumentReposit
             }
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "Error", 0);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return list;
@@ -195,7 +195,7 @@ public class OutgoingDocumentSqliteRepository implements OutgoingDocumentReposit
             }
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "Error", 0);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return list;
@@ -227,7 +227,7 @@ public class OutgoingDocumentSqliteRepository implements OutgoingDocumentReposit
             }
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "Error", 0);
+            AlertMaker.showErrorALert(e.toString());
         }
         
         return list;

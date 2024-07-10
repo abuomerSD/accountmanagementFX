@@ -11,6 +11,9 @@ public class SalesInvoiceHeader {
     private double tax;
     private double discount;
     private String comment;
+    private String invoiceType;
+    private String customerName;
+    
 
     public SalesInvoiceHeader() {
     }
@@ -27,6 +30,23 @@ public class SalesInvoiceHeader {
         this.comment = comment;
     }
 
+    public String getInvoiceType() {
+        return invoiceType;
+    }
+
+    public void setInvoiceType(String invoiceType) {
+        this.invoiceType = invoiceType;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+    
+    
     
     public long getId() {
         return id;

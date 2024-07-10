@@ -10,11 +10,13 @@ import com.accountmanagement.repositories.sCustomer.ScustomerSqliteRepository;
 import com.accountmanagement.repositories.salesinvoicedetails.SalesInvoiceDetailsSqliteRepository;
 import com.accountmanagement.repositories.salesinvoiceheader.SalesInvoiceHeaderSqliteRepository;
 import com.accountmanagement.utils.AlertMaker;
+import com.accountmanagement.utils.Constants;
 import com.accountmanagement.utils.NotificationMaker;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -39,6 +41,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
@@ -47,7 +50,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.FileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.view.JasperViewer;
 
 public class SalesInvoicesController implements Initializable {
 
@@ -132,6 +138,28 @@ public class SalesInvoicesController implements Initializable {
     private Button btnOpenFileChooser;
     @FXML
     private Button btnDeleteAllProducts;
+    @FXML
+    private Label lbInvoiceId;
+    @FXML
+    private Tab col;
+    @FXML
+    private TableColumn<SalesInvoiceHeader, Long> colIdIL;
+    @FXML
+    private TableColumn<SalesInvoiceHeader, String> colDateIL;
+    @FXML
+    private TableColumn<SalesInvoiceHeader, String> colCustomerNameIL;
+    @FXML
+    private TableColumn<SalesInvoiceHeader, String> colCommentIL;
+    @FXML
+    private TableColumn<SalesInvoiceHeader, Double> colTaxIL;
+    @FXML
+    private TableColumn<SalesInvoiceHeader, Double> colDiscountIL;
+    @FXML
+    private TableColumn<SalesInvoiceHeader, Double> colTotalIL;
+    @FXML
+    private TableColumn<SalesInvoiceHeader, String> colInvoiceTypeIL;
+    @FXML
+    private TableColumn<SalesInvoiceHeader, String> colFilePathIL;
 
     /**
      * Initializes the controller class.
@@ -141,7 +169,6 @@ public class SalesInvoicesController implements Initializable {
         
         // fill tables
         fillSalesInvoicesTable();
-        fillCustomersTable();
         fillCustomerTable();
         
         // cb's
@@ -173,6 +200,8 @@ public class SalesInvoicesController implements Initializable {
             
         });
         
+        btnPrintInvoice.setDisable(true);
+        
     }   
     
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMMM-yyyy");
@@ -181,7 +210,7 @@ public class SalesInvoicesController implements Initializable {
     ScustomerSqliteRepository customerRepo = new ScustomerSqliteRepository();
     CurrencySqliteRepository currencyRepo = new CurrencySqliteRepository();
     SalesInvoiceHeaderSqliteRepository headerRepo = new SalesInvoiceHeaderSqliteRepository();
-    SalesInvoiceDetailsSqliteRepository deatilsRepo = new SalesInvoiceDetailsSqliteRepository();
+    SalesInvoiceDetailsSqliteRepository detailsRepo = new SalesInvoiceDetailsSqliteRepository();
     ObservableList<SProduct> productObList = FXCollections.observableArrayList();
 
     @FXML
@@ -421,7 +450,7 @@ public class SalesInvoicesController implements Initializable {
     private void saveInvoice(ActionEvent event) {
         try {
             if(!isUpdateInvoice) {
-            saveSalesInvoice();
+                saveSalesInvoice();
             } else {
                 updateSalesInvoice();
             }
@@ -434,7 +463,11 @@ public class SalesInvoicesController implements Initializable {
     @FXML
     private void printInvoice(ActionEvent event) {
         try {
-            
+            long headerId = 0;
+        
+            headerId = Long.valueOf(lbInvoiceId.getText());
+        
+            printSalesInvoice(headerId);
         } catch (Exception e) {
             e.printStackTrace();
             AlertMaker.showErrorALert(e.toString());
@@ -444,7 +477,8 @@ public class SalesInvoicesController implements Initializable {
     @FXML
     private void newInvoice(ActionEvent event) {
         try {
-            
+            enableControls();
+            resetInvoice();
         } catch (Exception e) {
             e.printStackTrace();
             AlertMaker.showErrorALert(e.toString());
@@ -483,6 +517,29 @@ public class SalesInvoicesController implements Initializable {
 
     private void fillSalesInvoicesTable() {
         try {
+            ArrayList<SalesInvoiceHeader> list = headerRepo.findAllDesc();
+            ObservableList<SalesInvoiceHeader> ob = FXCollections.observableArrayList(list);
+            
+            for (SalesInvoiceHeader header : ob) {
+                header.setCustomerName(customerRepo.findById(header.getCustomerId()).getName());
+                if(header.isIsFileType()) {
+                    header.setInvoiceType("From File");
+                } else {
+                    header.setInvoiceType("Normal Invoice");
+                }
+            }
+            
+            colIdIL.setCellValueFactory(new PropertyValueFactory<>("id"));
+            colDateIL.setCellValueFactory(new PropertyValueFactory<>("date"));
+            colCustomerNameIL.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+            colCommentIL.setCellValueFactory(new PropertyValueFactory<>("comment"));
+            colTaxIL.setCellValueFactory(new PropertyValueFactory<>("tax"));
+            colDiscountIL.setCellValueFactory(new PropertyValueFactory<>("discount"));
+            colTotalIL.setCellValueFactory(new PropertyValueFactory<>("total"));
+            colInvoiceTypeIL.setCellValueFactory(new PropertyValueFactory<>("invoiceType"));
+            colFilePathIL.setCellValueFactory(new PropertyValueFactory<>("filePath"));
+            
+            tbInvoicesList.setItems(ob);
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -490,14 +547,14 @@ public class SalesInvoicesController implements Initializable {
         }
     }
 
-    private void fillCustomersTable() {
-        try {
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-            AlertMaker.showErrorALert(e.toString());
-        }
-    }
+//    private void fillCustomersTable() {
+//        try {
+//            
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            AlertMaker.showErrorALert(e.toString());
+//        }
+//    }
 
     private void setInvoicesTypeCb() {
         try {
@@ -552,6 +609,7 @@ public class SalesInvoicesController implements Initializable {
             
             cbCustomerName.getItems().clear();
             cbCustomerName.getItems().addAll(obList);
+            cbCustomerName.getSelectionModel().selectFirst();
             
             cbCustomerSearch.getItems().clear();
             cbCustomerSearch.getItems().addAll(obList);
@@ -575,6 +633,7 @@ public class SalesInvoicesController implements Initializable {
             cbInvoiceTypeSearch.getItems().addAll(ob);
             
             cbInvoiceType.setValue("Normal Invoice");
+            
             
         } catch(Exception e) {
             e.printStackTrace();
@@ -642,30 +701,33 @@ public class SalesInvoicesController implements Initializable {
     }
 
     private void saveSalesInvoice() {
-        DefaultTableModel model = (DefaultTableModel) tbProducts.getModel();
+        try {
             
             if(cbInvoiceType.getSelectionModel().getSelectedItem().equals("From File")) {
                 saveInvoiceAsFile();
                 return;
             }
             
-            if(model.getRowCount() < 1) {
-                JOptionPane.showMessageDialog(null, "ادخل بعض الاصناف اولا");
+            if(productObList.size() < 1) {
+                AlertMaker.showErrorALert("Enter Some Products First");
                 return;
             }
             
-            int result = JOptionPane.showConfirmDialog(null, "هل تريد حفظ الفاتورة؟", "تأكيد", JOptionPane.YES_NO_OPTION);
+            Optional<ButtonType> response = AlertMaker.showConfirmationAlert("Save Invoice ?");
             
-            if(result != JOptionPane.YES_OPTION) {
-                return;
-            }
+            if(!(response.get() == ButtonType.OK)) return;
+            
             
             // invoice header
             
-            Date dateBeforeFormat = txtInvoicedate.getDate();
-            String date = df.format(dateBeforeFormat);
+            Date dateBeforeFormat = Date.from(txtDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+            String date = dateFormat.format(dateBeforeFormat);
             
-            String customerName = cbCustomerName.getSelectedItem().toString();
+            String customerName = cbCustomerName.getSelectionModel().getSelectedItem();
+            if(customerName == null) {
+                AlertMaker.showErrorALert("Choose Customer");
+                return;
+            }
             
             HashMap customersMap = getCustomerHashMap();
             int customerId = (int) customersMap.get(customerName);
@@ -673,7 +735,7 @@ public class SalesInvoicesController implements Initializable {
             boolean isFileType;
             String filePath = null;
             
-            if(cbInvoicetype.getSelectedItem().toString().equals("من ملف")){
+            if(cbInvoiceType.getSelectionModel().getSelectedItem().equals("From File")){
                 isFileType = true;
                 filePath = txtFilePath.getText();
             } else {
@@ -683,7 +745,7 @@ public class SalesInvoicesController implements Initializable {
             double tax = Double.valueOf(txtTax.getText());
             double discount = Double.valueOf(txtDiscount.getText());
             String comment = txtComment.getText();
-            
+            double invoiceTotal = Double.valueOf(lbInvoiceTotal.getText());
             
             SalesInvoiceHeader header = SalesInvoiceHeader.builder()
                     .date(date)
@@ -697,43 +759,39 @@ public class SalesInvoicesController implements Initializable {
                     .build();
             
             long headerId = headerRepo.save(header);
-            lbInvoiceStatus.setText("جاري حفظ الفاتورة ...");
+            lbInvoiceStatus.setText("Saving ...");
             
             // invoice details
             
-            
-            
-            int rowCount = model.getRowCount();
-            
-            for (int i = 0; i < rowCount; i++) {
+            productObList.forEach(product -> {
                 SalesInvoiceDetails details = SalesInvoiceDetails.builder()
                         .headerId(headerId)
-                        .productName((String) tbProducts.getValueAt(i, 0))
-                        .productQty((double) tbProducts.getValueAt(i, 1))
-                        .productPrice((double) tbProducts.getValueAt(i, 2))
-                        .productTotal((double) tbProducts.getValueAt(i, 3))
+                        .productName(product.getName())
+                        .productQty(product.getQty())
+                        .productPrice(product.getPrice())
+                        .productTotal(product.getTotal())
                         .build();
                 
                 detailsRepo.save(details);
-            }
-            
+            });
+
             resetInvoice();
-            btnPrintInvoice.setEnabled(true);
-            btnSaveInvoice.setEnabled(false);
-            lbInvoiceStatus.setText("تم حفظ الفاتورة بالرقم :" + headerId);
+            btnPrintInvoice.setDisable(false);
+            btnSaveInvoice.setDisable(true);
+            lbInvoiceStatus.setText("Sales Invoice Saved with Id : " + headerId);
+            NotificationMaker.showInformation("Sales Invoice Saved with Id : " + headerId);
             lbInvoiceId.setText(String.valueOf(headerId));
-            setInvoicesListTableDate();
+            fillSalesInvoicesTable();
             disableInvoiceControls();
             
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, e);
         }
+    }
 
     private void saveInvoiceAsFile() {
         try {
-            
-            
 
             if(txtFilePath.getText().isEmpty()) {
                 AlertMaker.showErrorALert("Choose File");
@@ -767,6 +825,11 @@ public class SalesInvoicesController implements Initializable {
             String date = dateFormat.format(dateBeforeFormat);
             
             String customerName = cbCustomerName.getSelectionModel().getSelectedItem();
+            
+            if(customerName == null) {
+                AlertMaker.showErrorALert("Choose Customer");
+                return;
+            }
             
             HashMap customersMap = getCustomerHashMap();
             int customerId = (int) customersMap.get(customerName);
@@ -802,7 +865,8 @@ public class SalesInvoicesController implements Initializable {
             long headerId = headerRepo.save(header);
             
             if(headerId > 0) {
-                lbInvoiceStatus.setText("تم حفظ الفاتورة بالرقم :" + headerId);
+                lbInvoiceStatus.setText("Invoice Saved with id : " + headerId);
+                NotificationMaker.showInformation("Invoice Saved with id : " + headerId);
                 resetInvoice();
                 fillSalesInvoicesTable();
                 disableInvoiceControls();
@@ -852,7 +916,7 @@ public class SalesInvoicesController implements Initializable {
             
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e);
+            AlertMaker.showErrorALert(e.toString());
         }
         finally {
             if (in != null) {
@@ -879,6 +943,8 @@ public class SalesInvoicesController implements Initializable {
             txtDiscount.setDisable(true);
             txtComment.setDisable(true);
             btnSaveInvoice.setDisable(true);
+            productObList.clear();
+            tbProducts.setDisable(true);
   
             
         } catch(Exception e) {
@@ -902,6 +968,7 @@ public class SalesInvoicesController implements Initializable {
             txtDiscount.setDisable(false);
             txtComment.setDisable(false);
             btnSaveInvoice.setDisable(false);
+            tbProducts.setDisable(false);
   
             
         } catch(Exception e) {
@@ -927,10 +994,57 @@ public class SalesInvoicesController implements Initializable {
             lbTax.setText("");
             lbDiscount.setText("");
             lbInvoiceTotal.setText("");
+            btnPrintInvoice.setDisable(true);
+            cbCustomerName.getSelectionModel().selectFirst();
             
-            enableControls();
-
         } catch(Exception e) {
+            e.printStackTrace();
+            AlertMaker.showErrorALert(e.toString());
+        }
+    }
+
+    private void printSalesInvoice(long headerId) {
+        try {
+            HashMap customersMap = getCustomerHashMap();
+            
+            SalesInvoiceHeader header = headerRepo.findById(headerId);
+            
+            
+            int customerId = header.getCustomerId();
+            Customer customer = customerRepo.findById(customerId);
+            String date = header.getDate();
+            String comment = header.getComment();
+            double total = header.getTotal();
+            double tax = header.getTax();
+            double discount = header.getDiscount();
+            
+            String reportName = Constants.REPORTS_PATH +"salesInvoice.jasper";
+            
+
+            HashMap map = new HashMap();
+
+            map.put("id", headerId);
+            map.put("date", date);
+            map.put("customerName", customer.getName());
+            map.put("total", numberFormater.format(total));
+            map.put("tax", numberFormater.format(tax));
+            map.put("comment", comment);
+            map.put("discount", numberFormater.format(discount));
+            
+            ArrayList<SalesInvoiceDetails> list = detailsRepo.findByHeaderID(headerId);            
+            
+            InputStream report;
+            report = getClass().getResourceAsStream(reportName);
+            
+            JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(list);
+            
+
+            JasperPrint jPrint = JasperFillManager.fillReport(report, map, ds);
+            
+            JasperViewer.viewReport(jPrint, false);
+            
+            lbInvoiceStatus.setText("Invoice: " + headerId + " printed");
+        } catch (Exception e) {
             e.printStackTrace();
             AlertMaker.showErrorALert(e.toString());
         }

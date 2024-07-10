@@ -204,6 +204,7 @@
                                                 <Font name="Arial Bold" size="16.0" />
                                              </font>
                                           </Label>
+                                          <Label fx:id="lbInvoiceId" visible="false" />
                                           <Label alignment="CENTER_RIGHT" prefHeight="52.0" prefWidth="135.0" text="Date :">
                                              <font>
                                                 <Font name="Arial Bold" size="14.0" />
@@ -544,7 +545,7 @@
                         </AnchorPane>
                     </content>
                   </Tab>
-                  <Tab text="Sales Invoices List">
+                  <Tab fx:id="col" text="Sales Invoices List">
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
@@ -602,15 +603,15 @@
                                        <children>
                                           <TableView fx:id="tbInvoicesList" prefHeight="366.0" prefWidth="1047.0">
                                             <columns>
-                                              <TableColumn prefWidth="75.0" text="ID" />
-                                              <TableColumn prefWidth="106.0" text="Date" />
-                                                <TableColumn prefWidth="145.0" text="Customer" />
-                                                <TableColumn prefWidth="186.0" text="Comment" />
-                                                <TableColumn prefWidth="93.0" text="Tax" />
-                                                <TableColumn prefWidth="109.0" text="Discount" />
-                                                <TableColumn prefWidth="104.0" text="Total" />
-                                                <TableColumn prefWidth="114.0" text="Invoice Type" />
-                                                <TableColumn prefWidth="114.0" text="File Path" />
+                                              <TableColumn fx:id="colIdIL" prefWidth="75.0" text="ID" />
+                                              <TableColumn fx:id="colDateIL" prefWidth="106.0" text="Date" />
+                                                <TableColumn fx:id="colCustomerNameIL" prefWidth="145.0" text="Customer" />
+                                                <TableColumn fx:id="colCommentIL" prefWidth="186.0" text="Comment" />
+                                                <TableColumn fx:id="colTaxIL" prefWidth="93.0" text="Tax" />
+                                                <TableColumn fx:id="colDiscountIL" prefWidth="109.0" text="Discount" />
+                                                <TableColumn fx:id="colTotalIL" prefWidth="104.0" text="Total" />
+                                                <TableColumn fx:id="colInvoiceTypeIL" prefWidth="114.0" text="Invoice Type" />
+                                                <TableColumn fx:id="colFilePathIL" prefWidth="114.0" text="File Path" />
                                             </columns>
                                              <HBox.margin>
                                                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

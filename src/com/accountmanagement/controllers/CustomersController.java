@@ -15,8 +15,6 @@ import com.accountmanagement.repositories.outgoingdocument.OutgoingDocumentSqlit
 import com.accountmanagement.utils.AlertMaker;
 import com.accountmanagement.utils.Constants;
 import com.accountmanagement.utils.NotificationMaker;
-import java.awt.BorderLayout;
-import static java.awt.Component.CENTER_ALIGNMENT;
 import java.io.InputStream;
 import java.net.URL;
 import java.text.DecimalFormat;
@@ -49,7 +47,6 @@ import javafx.scene.input.KeyEvent;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import net.sf.jasperreports.swing.JRViewer;
 import net.sf.jasperreports.view.JasperViewer;
 
 

@@ -234,7 +234,7 @@
                                                 <Insets left="5.0" />
                                              </HBox.margin>
                                           </ComboBox>
-                                          <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#openFileChooser" prefHeight="37.0" prefWidth="48.0" styleClass="btn-open">
+                                          <Button fx:id="btnOpenFileChooser" contentDisplay="TOP" mnemonicParsing="false" onAction="#openFileChooser" prefHeight="37.0" prefWidth="48.0" styleClass="btn-open">
                                              <HBox.margin>
                                                 <Insets bottom="5.0" left="5.0" top="5.0" />
                                              </HBox.margin>
@@ -301,12 +301,12 @@
                                                 <Font name="Arial Bold" size="14.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="txtPrice" prefHeight="40.0" prefWidth="100.0" promptText="Price" styleClass="txt-rounded-background">
+                                          <TextField fx:id="txtPrice" onAction="#addProductToTable" prefHeight="40.0" prefWidth="100.0" promptText="Price" styleClass="txt-rounded-background">
                                              <font>
                                                 <Font name="Arial Bold" size="14.0" />
                                              </font>
                                           </TextField>
-                                          <Button mnemonicParsing="false" onAction="#addProductToTable" prefHeight="46.0" prefWidth="82.0" styleClass="btn-add" text="Add">
+                                          <Button fx:id="btnAddProduct" mnemonicParsing="false" onAction="#addProductToTable" prefHeight="46.0" prefWidth="82.0" styleClass="btn-add" text="Add">
                                              <graphic>
                                                 <FontAwesomeIcon iconName="SHOPPING_CART" size="20" styleClass="icon" />
                                              </graphic>
@@ -326,10 +326,10 @@
                                        <children>
                                           <TableView fx:id="tbProducts" prefHeight="299.0" prefWidth="780.0">
                                             <columns>
-                                              <TableColumn prefWidth="388.99998474121094" text="Product Name" />
-                                              <TableColumn prefWidth="117.0" text="Qty" />
-                                                <TableColumn prefWidth="123.0" text="Price" />
-                                                <TableColumn prefWidth="150.0" text="Total" />
+                                              <TableColumn fx:id="colProductName" prefWidth="388.99998474121094" text="Product Name" />
+                                              <TableColumn fx:id="colProductQty" prefWidth="117.0" text="Qty" />
+                                                <TableColumn fx:id="colProductPrice" prefWidth="123.0" text="Price" />
+                                                <TableColumn fx:id="colProductTotal" prefWidth="150.0" text="Total" />
                                             </columns>
                                              <HBox.margin>
                                                 <Insets left="5.0" />
@@ -337,7 +337,7 @@
                                           </TableView>
                                           <VBox alignment="TOP_CENTER" prefHeight="295.0" prefWidth="286.0" styleClass="hbox-bordered">
                                              <children>
-                                                <Button mnemonicParsing="false" onAction="#deleteProduct" prefHeight="50.0" prefWidth="262.0" styleClass="btn-delete" text="Delete Item">
+                                                <Button fx:id="btnDeleteProduct" mnemonicParsing="false" onAction="#deleteProduct" prefHeight="50.0" prefWidth="262.0" styleClass="btn-delete" text="Delete Item">
                                                    <font>
                                                       <Font name="Arial Bold" size="14.0" />
                                                    </font>
@@ -348,7 +348,7 @@
                                                       <Insets top="5.0" />
                                                    </VBox.margin>
                                                 </Button>
-                                                <Button mnemonicParsing="false" onAction="#deleteAllProducts" prefHeight="50.0" prefWidth="262.0" styleClass="btn-delete" text="Delete All">
+                                                <Button fx:id="btnDeleteAllProducts" mnemonicParsing="false" onAction="#deleteAllProducts" prefHeight="50.0" prefWidth="262.0" styleClass="btn-delete" text="Delete All">
                                                    <font>
                                                       <Font name="Arial Bold" size="14.0" />
                                                    </font>
@@ -371,7 +371,7 @@
                                                                   <Font name="Arial Bold" size="14.0" />
                                                                </font>
                                                             </Label>
-                                                            <Label fx:id="lbInvoiceTotal" alignment="CENTER" contentDisplay="CENTER" prefHeight="31.0" prefWidth="160.0" text="0.00">
+                                                            <Label fx:id="lbProductsTotal" alignment="CENTER" contentDisplay="CENTER" prefHeight="31.0" prefWidth="160.0" text="0.00">
                                                                <font>
                                                                   <Font name="Arial Bold" size="14.0" />
                                                                </font>
@@ -413,7 +413,7 @@
                                                                   <Font name="Arial Bold" size="14.0" />
                                                                </font>
                                                             </Label>
-                                                            <Label fx:id="lbTotal" alignment="CENTER" contentDisplay="CENTER" prefHeight="31.0" prefWidth="160.0" text="0.00" textFill="#039034">
+                                                            <Label fx:id="lbInvoiceTotal" alignment="CENTER" contentDisplay="CENTER" prefHeight="31.0" prefWidth="160.0" text="0.00" textFill="#039034">
                                                                <font>
                                                                   <Font name="Arial Bold" size="14.0" />
                                                                </font>
@@ -440,7 +440,7 @@
                                                             <Font name="Arial Bold" size="14.0" />
                                                          </font>
                                                       </Label>
-                                                      <TextField fx:id="txtTax" prefHeight="40.0" prefWidth="111.0" styleClass="txt-rounded-background" text="0.00">
+                                                      <TextField fx:id="txtTax" onKeyReleased="#calculateTaxAndDiscount" prefHeight="40.0" prefWidth="111.0" styleClass="txt-rounded-background" text="0.00">
                                                          <font>
                                                             <Font name="Arial Bold" size="14.0" />
                                                          </font>
@@ -453,7 +453,7 @@
                                                             <Font name="Arial Bold" size="14.0" />
                                                          </font>
                                                       </Label>
-                                                      <TextField fx:id="txtDiscount" prefHeight="40.0" prefWidth="111.0" styleClass="txt-rounded-background" text="0.00">
+                                                      <TextField fx:id="txtDiscount" onKeyReleased="#calculateTaxAndDiscount" prefHeight="40.0" prefWidth="111.0" styleClass="txt-rounded-background" text="0.00">
                                                          <font>
                                                             <Font name="Arial Bold" size="14.0" />
                                                          </font>
@@ -501,7 +501,7 @@
                                           </VBox>
                                           <VBox alignment="TOP_CENTER" prefHeight="122.0" prefWidth="281.0" styleClass="hbox-bordered">
                                              <children>
-                                                <Button mnemonicParsing="false" onAction="#saveInvoice" prefHeight="50.0" prefWidth="262.0" styleClass="btn-save" text="Save Invoice">
+                                                <Button fx:id="btnSaveInvoice" mnemonicParsing="false" onAction="#saveInvoice" prefHeight="50.0" prefWidth="262.0" styleClass="btn-save" text="Save Invoice">
                                                    <font>
                                                       <Font name="Arial Bold" size="14.0" />
                                                    </font>
@@ -512,7 +512,7 @@
                                                       <Insets top="5.0" />
                                                    </VBox.margin>
                                                 </Button>
-                                                <Button mnemonicParsing="false" onAction="#printInvoice" prefHeight="50.0" prefWidth="262.0" styleClass="btn-update" text="Print Invoice">
+                                                <Button fx:id="btnPrintInvoice" mnemonicParsing="false" onAction="#printInvoice" prefHeight="50.0" prefWidth="262.0" styleClass="btn-update" text="Print Invoice">
                                                    <font>
                                                       <Font name="Arial Bold" size="14.0" />
                                                    </font>
@@ -523,7 +523,7 @@
                                                       <Insets top="5.0" />
                                                    </VBox.margin>
                                                 </Button>
-                                                <Button mnemonicParsing="false" onAction="#newInvoice" prefHeight="50.0" prefWidth="262.0" styleClass="btn-add" text="New Invoice">
+                                                <Button fx:id="btnNewInvoice" mnemonicParsing="false" onAction="#newInvoice" prefHeight="50.0" prefWidth="262.0" styleClass="btn-add" text="New Invoice">
                                                    <font>
                                                       <Font name="Arial Bold" size="14.0" />
                                                    </font>

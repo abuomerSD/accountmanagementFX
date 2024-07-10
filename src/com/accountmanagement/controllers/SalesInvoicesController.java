@@ -12,6 +12,8 @@ import com.accountmanagement.repositories.salesinvoiceheader.SalesInvoiceHeaderS
 import com.accountmanagement.utils.AlertMaker;
 import com.accountmanagement.utils.Constants;
 import com.accountmanagement.utils.NotificationMaker;
+import com.accountmanagement.utils.OSDetector;
+import java.awt.Desktop;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -42,6 +44,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
@@ -50,6 +53,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.FileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -160,6 +164,8 @@ public class SalesInvoicesController implements Initializable {
     private TableColumn<SalesInvoiceHeader, String> colInvoiceTypeIL;
     @FXML
     private TableColumn<SalesInvoiceHeader, String> colFilePathIL;
+    @FXML
+    private TabPane tabPane;
 
     /**
      * Initializes the controller class.
@@ -489,6 +495,25 @@ public class SalesInvoicesController implements Initializable {
     private void viewInvoice(ActionEvent event) {
         try {
             
+            SalesInvoiceHeader header = tbInvoicesList.getSelectionModel().getSelectedItem();
+            
+            if(header == null) {
+                AlertMaker.showErrorALert("Choose Invoice First");
+                return;
+            }
+            
+            String type = header.getInvoiceType();
+            String filePath = header.getFilePath();
+            long id = header.getId();
+            
+            
+            
+            if(type.equals("From File")){
+                File file = new File(filePath);
+                showInvoiceFile(file);
+            } else {
+                printSalesInvoice(id);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             AlertMaker.showErrorALert(e.toString());
@@ -499,6 +524,62 @@ public class SalesInvoicesController implements Initializable {
     private void updateInvoice(ActionEvent event) {
         try {
             
+            SalesInvoiceHeader h = tbInvoicesList.getSelectionModel().getSelectedItem();
+            
+            if(h == null) {
+                AlertMaker.showErrorALert("Choose Invoice First");
+                return;
+            }
+
+            tabPane.getSelectionModel().select(1);
+            resetInvoice();
+            enableControls();
+            
+            long id = h.getId();
+            
+            SalesInvoiceHeader header = headerRepo.findById(id);
+            ArrayList<SalesInvoiceDetails> details = detailsRepo.findByHeaderID(id);
+//            ObservableList<SalesInvoiceDetails> ob = FXCollections.observableArrayList(details);
+            productObList.clear();
+            
+            details.forEach(detail -> {
+                SProduct product = new SProduct(detail.getProductName(), detail.getProductQty(), detail.getProductPrice(), detail.getProductTotal());
+                productObList.add(product);
+//                System.out.println(product.getName());
+            });
+            
+            
+            
+            txtDate.setValue(LocalDate.parse(header.getDate(), dateTimeFormat));
+            Customer customer = customerRepo.findById(header.getCustomerId());
+            cbCustomerName.getSelectionModel().select(customer.getName());
+            txtFilePath.setText(header.getFilePath());
+            lbInvoiceId.setText(String.valueOf(id));
+            
+            String type = "";
+            
+            if(header.isIsFileType()) {
+                type = "From File";
+            } else {
+                type = "Normal Invoice";
+            }
+            cbInvoiceType.getSelectionModel().select(type);
+            
+            colProductName.setCellValueFactory(new PropertyValueFactory<SProduct, String>("name"));
+            colProductQty.setCellValueFactory(new PropertyValueFactory<SProduct, Double>("qty"));
+            colProductPrice.setCellValueFactory(new PropertyValueFactory<SProduct, Double>("price"));
+            colProductTotal.setCellValueFactory(new PropertyValueFactory<SProduct, Double>("total"));
+            
+            tbProducts.setItems(productObList);
+            
+            
+            txtTax.setText(String.valueOf(header.getTax()));
+            txtDiscount.setText(String.valueOf(header.getDiscount()));
+            txtComment.setText(header.getComment());
+            
+            calculateInvoiceTotal();
+            isUpdateInvoice = true;
+            btnSaveInvoice.setDisable(false);
         } catch (Exception e) {
             e.printStackTrace();
             AlertMaker.showErrorALert(e.toString());
@@ -507,14 +588,48 @@ public class SalesInvoicesController implements Initializable {
 
     @FXML
     private void deleteInvoice(ActionEvent event) {
-        try {
+        
+            try{
+            SalesInvoiceHeader header = tbInvoicesList.getSelectionModel().getSelectedItem();
+            String type = header.getInvoiceType();
             
+            if(header == null) {
+                AlertMaker.showErrorALert("Choose Invoice First");
+                return;
+            }
+            
+            long id = header.getId();
+            
+            Optional<ButtonType> response = AlertMaker.showConfirmationAlert("Delete Invoice : "+ header.getId());
+            
+            if(! (response.get() == ButtonType.OK)) return;
+            
+            if(type.equals("From File"))   {
+                if(headerRepo.delete(id)) {
+                    AlertMaker.showMessageAlert("Invoice No : " + id + " deleted");
+                    NotificationMaker.showInformation("Invoice No : " + id + " deleted");
+                    fillSalesInvoicesTable();
+                }
+            
+            }
+            else {
+                if(headerRepo.delete(id) && detailsRepo.delete(id)) {
+                    AlertMaker.showMessageAlert("Invoice No : " + id + " deleted");
+                    NotificationMaker.showInformation("Invoice No : " + id + " deleted");
+                    fillSalesInvoicesTable();
+                    }
+            }
+            
+            
+            
+         
         } catch (Exception e) {
             e.printStackTrace();
             AlertMaker.showErrorALert(e.toString());
-        }
+        
     }
-
+  }
+    
     private void fillSalesInvoicesTable() {
         try {
             ArrayList<SalesInvoiceHeader> list = headerRepo.findAllDesc();
@@ -547,14 +662,6 @@ public class SalesInvoicesController implements Initializable {
         }
     }
 
-//    private void fillCustomersTable() {
-//        try {
-//            
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            AlertMaker.showErrorALert(e.toString());
-//        }
-//    }
 
     private void setInvoicesTypeCb() {
         try {
@@ -893,7 +1000,98 @@ public class SalesInvoicesController implements Initializable {
     
 
     private void updateSalesInvoice() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            
+            if(cbInvoiceType.getSelectionModel().getSelectedItem().equals("From File")) {
+//                saveInvoiceAsFile();
+                updateInvoiceAsFile();
+                return;
+            }
+            
+            if(productObList.size() < 1) {
+                AlertMaker.showErrorALert("Enter Some Products First");
+                return;
+            }
+            
+            Optional<ButtonType> response = AlertMaker.showConfirmationAlert("Update Invoice ?");
+            
+            if(!(response.get() == ButtonType.OK)) return;
+            
+            // invoice header
+            
+            Date dateBeforeFormat = Date.from(txtDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+            String date = dateFormat.format(dateBeforeFormat);
+            
+            String customerName = cbCustomerName.getSelectionModel().getSelectedItem();
+            
+            HashMap customersMap = getCustomerHashMap();
+            int customerId = (int) customersMap.get(customerName);
+            
+            boolean isFileType;
+            String filePath = null;
+            
+            if(cbInvoiceType.getSelectionModel().getSelectedItem().equals("From File")){
+                isFileType = true;
+                filePath = txtFilePath.getText();
+            } else {
+                isFileType = false;
+            }
+            
+            double tax = Double.valueOf(txtTax.getText());
+            double discount = Double.valueOf(txtDiscount.getText());
+            double invoiceTotal = Double.valueOf(lbInvoiceTotal.getText());
+            String comment = txtComment.getText();
+            long headerId = Long.valueOf(lbInvoiceId.getText());
+            
+            SalesInvoiceHeader header = SalesInvoiceHeader.builder()
+                    .id(headerId)
+                    .date(date)
+                    .customerId(customerId)
+                    .total(invoiceTotal)
+                    .isFileType(isFileType)
+                    .filePath(filePath)
+                    .tax(tax)
+                    .discount(discount)
+                    .comment(comment)
+                    .build();
+            
+            lbInvoiceStatus.setText("Saving ...");
+            
+            headerRepo.update(header);
+            
+            
+            // invoice details
+            
+            // delete all previous details
+            
+            detailsRepo.delete(headerId);
+            
+            productObList.forEach(product -> {
+                SalesInvoiceDetails details = SalesInvoiceDetails.builder()
+                        .headerId(headerId)
+                        .productName(product.getName())
+                        .productQty(product.getQty())
+                        .productPrice(product.getPrice())
+                        .productTotal(product.getTotal())
+                        .build();
+                
+                detailsRepo.save(details);
+            });
+            
+            
+            resetInvoice();
+            btnPrintInvoice.setDisable(false);
+            btnSaveInvoice.setDisable(true);
+            lbInvoiceStatus.setText("Invoice updated : " + headerId);
+            NotificationMaker.showInformation("Invoice updated : " + headerId);
+            lbInvoiceId.setText(String.valueOf(headerId));
+            fillSalesInvoicesTable();
+            disableInvoiceControls();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, e);
+        }
     }
 
     private void copyFile(File src, File dist) throws IOException {
@@ -990,12 +1188,13 @@ public class SalesInvoicesController implements Initializable {
             txtDiscount.setText("0.00");
             txtComment.clear();
             lbInvoiceStatus.setText("");
-            lbProductsTotal.setText("");
-            lbTax.setText("");
-            lbDiscount.setText("");
-            lbInvoiceTotal.setText("");
+            lbProductsTotal.setText("0.00");
+            lbTax.setText("0.00");
+            lbDiscount.setText("0.00");
+            lbInvoiceTotal.setText("0.00");
             btnPrintInvoice.setDisable(true);
             cbCustomerName.getSelectionModel().selectFirst();
+            isUpdateInvoice = false;
             
         } catch(Exception e) {
             e.printStackTrace();
@@ -1044,6 +1243,123 @@ public class SalesInvoicesController implements Initializable {
             JasperViewer.viewReport(jPrint, false);
             
             lbInvoiceStatus.setText("Invoice: " + headerId + " printed");
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertMaker.showErrorALert(e.toString());
+        }
+    }
+
+    private void showInvoiceFile(File file) {
+        try {
+            if (OSDetector.isWindows())
+        {
+            Runtime.getRuntime().exec(new String[]
+            {"rundll32", "url.dll,FileProtocolHandler",
+             file.getAbsolutePath()});
+//            return true;
+        } else if (OSDetector.isLinux() || OSDetector.isMac())
+        {
+            Runtime.getRuntime().exec(new String[]{"/usr/bin/open",
+                                                   file.getAbsolutePath()});
+//            return true;
+        } else
+        {
+            // Unknown OS, try with desktop
+            if (Desktop.isDesktopSupported())
+            {
+                Desktop.getDesktop().open(file);
+//                return true;
+            }
+            else
+            {
+//                return false;
+            }
+        }
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertMaker.showErrorALert(e.toString());
+        }
+    }
+
+    private void updateInvoiceAsFile() {
+        try {
+            
+            long headerId = Long.valueOf(lbInvoiceId.getText());
+
+            if(txtFilePath.getText().isEmpty()) {
+                AlertMaker.showErrorALert("Choose File");
+                return;
+            }
+            
+            File src = new File(txtFilePath.getText());
+            
+            String extension = "";
+
+            int i = src.getName().lastIndexOf('.');
+            if (i > 0) {
+                extension = src.getName().substring(i+1);
+            }
+            
+            String newFileName = UUID.randomUUID().toString() + "." + extension;
+            
+            String distPath = System.getProperty("user.dir") + "/invoices/" + newFileName ;
+            File dist = new File(distPath);
+            
+            Optional<ButtonType> response = AlertMaker.showConfirmationAlert("Update Invoice ?");
+            
+            lbInvoiceStatus.setText("Saving...");
+            copyFile(src, dist);
+
+            // invoice header
+            
+            Date dateBeforeFormat = Date.from(txtDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());;
+            String date = dateFormat.format(dateBeforeFormat);
+            
+            String customerName = cbCustomerName.getSelectionModel().getSelectedItem();
+            
+            HashMap customersMap = getCustomerHashMap();
+            int customerId = (int) customersMap.get(customerName);
+            
+            boolean isFileType;
+            String filePath = null;
+            
+            if(cbInvoiceType.getSelectionModel().getSelectedItem().equals("From File")){
+                isFileType = true;
+                filePath = distPath;
+            } else {
+                isFileType = false;
+            }
+            
+            double tax = 0;
+            double discount = 0;
+            String comment = txtComment.getText();
+            
+            
+            SalesInvoiceHeader header = SalesInvoiceHeader.builder()
+                    .id(headerId)
+                    .date(date)
+                    .customerId(customerId)
+                    .total(0)
+                    .isFileType(isFileType)
+                    .filePath(filePath)
+                    .tax(tax)
+                    .discount(discount)
+                    .comment(comment)
+                    .build();
+            
+            
+            
+            boolean result1 = headerRepo.update(header);
+            
+            if(result1) {
+                lbInvoiceStatus.setText("Invoice updated : " + headerId);
+                NotificationMaker.showInformation("Invoice updated : " + headerId);
+                resetInvoice();
+                disableInvoiceControls();
+                fillSalesInvoicesTable();
+            }
+            
+            
         } catch (Exception e) {
             e.printStackTrace();
             AlertMaker.showErrorALert(e.toString());

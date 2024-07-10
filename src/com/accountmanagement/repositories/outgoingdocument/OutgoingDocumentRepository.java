@@ -13,6 +13,6 @@ public interface OutgoingDocumentRepository {
     OutgoingDocument findById(long id);
     ArrayList<OutgoingDocument> findAll();
     ArrayList<OutgoingDocument> findAllDesc();
-    ArrayList<OutgoingDocument> filterById(Long id);
+    ArrayList<OutgoingDocument> filterById(String id);
     
 }

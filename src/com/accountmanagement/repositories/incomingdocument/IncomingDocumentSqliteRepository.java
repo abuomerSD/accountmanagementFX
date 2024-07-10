@@ -204,7 +204,7 @@ public class IncomingDocumentSqliteRepository implements IncomingDocumentReposit
     }
 
     @Override
-    public ArrayList<IncomingDocument> filterById(long id) {
+    public ArrayList<IncomingDocument> filterById(String id) {
         ArrayList<IncomingDocument> list = new ArrayList<>();
         
         String sql = "SELECT * FROM tb_incoming_document WHERE Id LIKE '%"+ id +"%'";
@@ -226,6 +226,7 @@ public class IncomingDocumentSqliteRepository implements IncomingDocumentReposit
                         .value(rs.getDouble("Value"))
                         .comment(rs.getString("Comment"))
                         .build();
+                
                 list.add(document);
             }
         } catch (Exception e) {

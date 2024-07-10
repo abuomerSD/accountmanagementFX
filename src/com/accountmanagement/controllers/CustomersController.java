@@ -5,10 +5,12 @@ import com.accountmanagement.models.AccountMovement;
 import com.accountmanagement.models.Currency;
 import com.accountmanagement.models.Customer;
 import com.accountmanagement.models.IncomingDocument;
+import com.accountmanagement.models.OutgoingDocument;
 import com.accountmanagement.repositories.accountmovement.AccountMovementSqliteRepository;
 import com.accountmanagement.repositories.currency.CurrencySqliteRepository;
 import com.accountmanagement.repositories.customer.CustomerSqliteRepository;
 import com.accountmanagement.repositories.incomingdocument.IncomingDocumentSqliteRepository;
+import com.accountmanagement.repositories.outgoingdocument.OutgoingDocumentSqliteRepository;
 import com.accountmanagement.utils.AlertMaker;
 import com.accountmanagement.utils.NotificationMaker;
 import java.net.URL;
@@ -48,6 +50,7 @@ public class CustomersController implements Initializable {
     CustomerSqliteRepository customerRepo = new CustomerSqliteRepository();
     CurrencySqliteRepository currencyRepo = new CurrencySqliteRepository();
     IncomingDocumentSqliteRepository inDocRepo = new IncomingDocumentSqliteRepository();
+    OutgoingDocumentSqliteRepository outDocRepo = new OutgoingDocumentSqliteRepository();
     AccountMovementSqliteRepository accountMovementRepo = new AccountMovementSqliteRepository();
     
 
@@ -806,7 +809,16 @@ public class CustomersController implements Initializable {
     @FXML
     private void filterInDocTable(KeyEvent event) {
         try {
+            String id = txtInDocIdSearch.getText(); 
             
+            ArrayList<IncomingDocument> list = inDocRepo.filterById(id);
+            list.forEach(doc -> {
+                doc.setCurrencyName(currencyRepo.findById(doc.getCurrencyId()).getName());
+                doc.setCustomerName(customerRepo.findById(doc.getCustomerId()).getName());
+            });
+            ObservableList ob = FXCollections.observableArrayList(list);
+            
+            tbInDoc.setItems(ob);
         } catch (Exception e) {
             e.printStackTrace();
             AlertMaker.showErrorALert(e.toString());
@@ -816,7 +828,16 @@ public class CustomersController implements Initializable {
     @FXML
     private void filterOutDocTable(KeyEvent event) {
         try {
+            String id = txtOutDocIdSearch.getText(); 
             
+            ArrayList<OutgoingDocument> list = outDocRepo.filterById(id);
+            list.forEach(doc -> {
+                doc.setCurrencyName(currencyRepo.findById(doc.getCurrencyId()).getName());
+                doc.setCustomerName(customerRepo.findById(doc.getCustomerId()).getName());
+            });
+            ObservableList ob = FXCollections.observableArrayList(list);
+            
+            tbOutDoc.setItems(ob);
         } catch (Exception e) {
             e.printStackTrace();
             AlertMaker.showErrorALert(e.toString());

@@ -201,7 +201,7 @@ public class OutgoingDocumentSqliteRepository implements OutgoingDocumentReposit
         return list;
     }
 
-    public ArrayList<OutgoingDocument> filterById(Long id) {
+    public ArrayList<OutgoingDocument> filterById(String id) {
         ArrayList<OutgoingDocument> list = new ArrayList<>();
         
         String sql = "SELECT * FROM tb_outgoing_document WHERE Id LIKE '%"+ id +"%'";

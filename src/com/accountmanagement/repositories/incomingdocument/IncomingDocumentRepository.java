@@ -12,7 +12,7 @@ public interface IncomingDocumentRepository {
     IncomingDocument findById(long id);
     ArrayList<IncomingDocument> findAll();
     ArrayList<IncomingDocument> findAllDesc();
-    ArrayList<IncomingDocument> filterById(long id);
+    ArrayList<IncomingDocument> filterById(String id);
     
     
 }

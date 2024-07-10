@@ -34,6 +34,14 @@ public class OutgoingDocument {
         return currencyName;
     }
 
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public void setCurrencyName(String currencyName) {
+        this.currencyName = currencyName;
+    }
+
     
 
     public long getId() {

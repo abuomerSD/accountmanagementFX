@@ -4,6 +4,7 @@ package com.accountmanagement.controllers;
 import com.accountmanagement.models.AccountMovement;
 import com.accountmanagement.models.Currency;
 import com.accountmanagement.models.Customer;
+import com.accountmanagement.models.CustomerBalance;
 import com.accountmanagement.models.IncomingDocument;
 import com.accountmanagement.models.OutgoingDocument;
 import com.accountmanagement.repositories.accountmovement.AccountMovementSqliteRepository;
@@ -50,7 +51,6 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.swing.JRViewer;
 import net.sf.jasperreports.view.JasperViewer;
-import org.eclipse.jdt.internal.compiler.impl.Constant;
 
 
 public class CustomersController implements Initializable {
@@ -226,6 +226,28 @@ public class CustomersController implements Initializable {
                     txtInDocComment.setText(doc.getComment());
                     
                 } catch(Exception e) {
+                    e.printStackTrace();
+                    AlertMaker.showErrorALert(e.toString());
+                }
+            }
+            
+        });
+        
+        tbOutDoc.getFocusModel().focusedCellProperty().addListener(new ChangeListener<TablePosition>() {
+            @Override
+            public void changed(ObservableValue<? extends TablePosition> observable, TablePosition oldValue, TablePosition newValue) {
+                try{
+                    OutgoingDocument doc = tbOutDoc.getSelectionModel().getSelectedItem();
+                    
+                    if(doc == null) return;
+                    
+                    txtOutDocDate.setValue(LocalDate.parse(doc.getDate(), dateTimeFormat));
+                    cbOutDocCustomerName.setValue(doc.getCustomerName());
+                    cbOutDocCurrencyName.setValue(doc.getCurrencyName());
+                    txtOutDocValue.setText(String.valueOf(doc.getValue()));
+                    txtOutDocComment.setText(doc.getComment());
+                    
+                } catch (Exception e) {
                     e.printStackTrace();
                     AlertMaker.showErrorALert(e.toString());
                 }
@@ -875,6 +897,7 @@ public class CustomersController implements Initializable {
             if(!(response.get() == ButtonType.OK)) return;
             
             if(outDocRepo.delete(doc.getId())) {
+                accountMovementRepo.delete(0, doc.getId());
                 lbOutDocStatus.setText("Document with id : " + doc.getId() + " deleted");
                 NotificationMaker.showInformation("Document with id : " + doc.getId() + " deleted");
                 fillOutDocTable();
@@ -896,6 +919,16 @@ public class CustomersController implements Initializable {
             String customerName = cbReportCustomerName.getSelectionModel().getSelectedItem();
             String currencyName = cbReportCurrencyName.getSelectionModel().getSelectedItem();
             
+            if(customerName == null) {
+                AlertMaker.showErrorALert("Choose Customer");
+                return;
+            }
+            
+            if(currencyName == null) {
+                AlertMaker.showErrorALert("Choose Currency");
+                return;
+            }
+            
             int customerId = (int) customersMap.get(customerName);
             int currencyId = (int) currencyMap.get(currencyName);
             
@@ -909,6 +942,11 @@ public class CustomersController implements Initializable {
             map.put("currencyName", currencyName);
             
             ArrayList<AccountMovement> list = accountMovementRepo.findByCustomerIdAndCurrencyId(customerId, currencyId);
+            
+            if(list.size() == 0) {
+                AlertMaker.showErrorALert("No Account Movements For this Customer At this Currency");
+                return;
+            }
             
             double balance = 0.00;
             
@@ -941,6 +979,53 @@ public class CustomersController implements Initializable {
     private void showCustomerTotalReport(ActionEvent event) {
         try {
             
+            
+            HashMap customersMap = customerRepo.getCustomerMap();
+            
+            String customerName = cbReportCustomerName.getSelectionModel().getSelectedItem();
+            if(customerName == null) {
+                AlertMaker.showErrorALert("Choose Customer");
+                return;
+            }
+            
+            int customerId = (int) customersMap.get(customerName);
+            
+            
+            
+            String reportName = Constants.REPORTS_PATH +"customerTotalBalance.jasper";
+            
+
+            HashMap map = new HashMap();
+
+            map.put("customerName", customerName);
+            
+            ArrayList<Currency> currencyList = currencyRepo.findAll();
+            
+            ArrayList<CustomerBalance> customerBalanceList = new ArrayList<>();
+            
+            double balance = 0.00;
+            
+            for (Currency currency : currencyList) {
+                balance = accountMovementRepo.getCustomerBalance(customerId, currency.getId());
+                
+                CustomerBalance customerBalance = new CustomerBalance(currency.getName(), numberFormater.format(balance));
+                
+                customerBalanceList.add(customerBalance);
+                
+            }
+                                            
+            
+            InputStream report;
+            report = getClass().getResourceAsStream(reportName);
+            
+            JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(customerBalanceList);
+            
+            
+            JasperPrint jPrint = JasperFillManager.fillReport(report, map, ds);
+            
+            JasperViewer.viewReport(jPrint, false);
+            
+
         } catch (Exception e) {
             e.printStackTrace();
             AlertMaker.showErrorALert(e.toString());

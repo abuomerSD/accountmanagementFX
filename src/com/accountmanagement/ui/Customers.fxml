@@ -661,7 +661,7 @@
                                           </HBox>
                                           <HBox alignment="CENTER" prefHeight="34.0" prefWidth="409.0">
                                              <children>
-                                                <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#deleteIncomingDocument" prefHeight="60.0" prefWidth="383.0" styleClass="btn-delete" stylesheets="@style/style.css" text="Delete">
+                                                <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#deleteOutgoingDocument" prefHeight="60.0" prefWidth="383.0" styleClass="btn-delete" stylesheets="@style/style.css" text="Delete">
                                                    <HBox.margin>
                                                       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                                    </HBox.margin>
@@ -722,12 +722,12 @@
                                              <children>
                                                 <TableView fx:id="tbOutDoc" editable="true" prefHeight="450.0" prefWidth="650.0" tableMenuButtonVisible="true">
                                                    <columns>
-                                                      <TableColumn prefWidth="75.0" text="ID" />
-                                                      <TableColumn prefWidth="83.0" text="Date" />
-                                                      <TableColumn prefWidth="123.0" text="Customer Name" />
-                                                      <TableColumn prefWidth="96.0" text="Currency" />
-                                                      <TableColumn prefWidth="101.0" text="Value" />
-                                                      <TableColumn prefWidth="169.0" text="Comment" />
+                                                      <TableColumn fx:id="colOutDocId" prefWidth="75.0" text="ID" />
+                                                      <TableColumn fx:id="colOutDocDate" prefWidth="83.0" text="Date" />
+                                                      <TableColumn fx:id="colOutDocCustomerName" prefWidth="123.0" text="Customer Name" />
+                                                      <TableColumn fx:id="colOutDocCurrencyName" prefWidth="96.0" text="Currency" />
+                                                      <TableColumn fx:id="colOutDocValue" prefWidth="101.0" text="Value" />
+                                                      <TableColumn fx:id="colOutDocComment" prefWidth="169.0" text="Comment" />
                                                    </columns>
                                                    <HBox.margin>
                                                       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

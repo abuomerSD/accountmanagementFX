@@ -12,8 +12,13 @@ import com.accountmanagement.repositories.customer.CustomerSqliteRepository;
 import com.accountmanagement.repositories.incomingdocument.IncomingDocumentSqliteRepository;
 import com.accountmanagement.repositories.outgoingdocument.OutgoingDocumentSqliteRepository;
 import com.accountmanagement.utils.AlertMaker;
+import com.accountmanagement.utils.Constants;
 import com.accountmanagement.utils.NotificationMaker;
+import java.awt.BorderLayout;
+import static java.awt.Component.CENTER_ALIGNMENT;
+import java.io.InputStream;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -40,6 +45,12 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.swing.JRViewer;
+import net.sf.jasperreports.view.JasperViewer;
+import org.eclipse.jdt.internal.compiler.impl.Constant;
 
 
 public class CustomersController implements Initializable {
@@ -47,6 +58,7 @@ public class CustomersController implements Initializable {
     
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMMM-yyyy");
     DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("dd-MMMM-yyyy");
+    DecimalFormat numberFormater =  new DecimalFormat("#,###,###.##");
     CustomerSqliteRepository customerRepo = new CustomerSqliteRepository();
     CurrencySqliteRepository currencyRepo = new CurrencySqliteRepository();
     IncomingDocumentSqliteRepository inDocRepo = new IncomingDocumentSqliteRepository();
@@ -70,8 +82,6 @@ public class CustomersController implements Initializable {
     private TableColumn<Customer, String> colCustomerName;
     @FXML
     private TableColumn<Customer, String> colCustomerPhone;
-    
-    
     @FXML
     private TextField txtCurrencyName;
     @FXML
@@ -111,7 +121,7 @@ public class CustomersController implements Initializable {
     @FXML
     private TextField txtOutDocIdSearch;
     @FXML
-    private TableView<?> tbOutDoc;
+    private TableView<OutgoingDocument> tbOutDoc;
     @FXML
     private ComboBox<String> cbReportCustomerName;
     @FXML
@@ -121,7 +131,7 @@ public class CustomersController implements Initializable {
     @FXML
     private TableColumn<Currency, String> colCurrencyName;
     @FXML
-    private TableColumn<IncomingDocument, Integer> colInDocId;
+    private TableColumn<IncomingDocument, Long> colInDocId;
     @FXML
     private TableColumn<IncomingDocument, String> colInDocDate;
     @FXML
@@ -132,6 +142,18 @@ public class CustomersController implements Initializable {
     private TableColumn<IncomingDocument, String> colInDocComment;
     @FXML
     private TableColumn<IncomingDocument, String> colInDocCurrencyName;
+    @FXML
+    private TableColumn<OutgoingDocument, Long> colOutDocId;
+    @FXML
+    private TableColumn<OutgoingDocument, String> colOutDocDate;
+    @FXML
+    private TableColumn<OutgoingDocument, String> colOutDocCustomerName;
+    @FXML
+    private TableColumn<OutgoingDocument, String> colOutDocCurrencyName;
+    @FXML
+    private TableColumn<OutgoingDocument, Double> colOutDocValue;
+    @FXML
+    private TableColumn<OutgoingDocument, String> colOutDocComment;
 
     /**
      * Initializes the controller class.
@@ -145,6 +167,7 @@ public class CustomersController implements Initializable {
         fillCustomerTable();
         fillCurrencyTable();
         fillInDocTable();
+        fillOutDocTable();
         
         // set cb's data
         setAllCbsCustomerName();
@@ -483,12 +506,12 @@ public class CustomersController implements Initializable {
                 return;
             }
             
-            if(cbInDocCustomerName.getSelectionModel().getSelectedItem().isEmpty()){
+            if(cbInDocCustomerName.getSelectionModel().getSelectedItem() == null){
                 AlertMaker.showErrorALert("Choose Customer");
                 return;
             }
             
-            if(cbInDocCurrencyName.getSelectionModel().getSelectedItem().isEmpty()){
+            if(cbInDocCurrencyName.getSelectionModel().getSelectedItem() == null){
                 AlertMaker.showErrorALert("Choose Currency");
                 return;
             }
@@ -563,12 +586,12 @@ public class CustomersController implements Initializable {
                 return;
             }
             
-            if(cbInDocCustomerName.getSelectionModel().getSelectedItem().isEmpty()){
+            if(cbInDocCustomerName.getSelectionModel().getSelectedItem() == null){
                 AlertMaker.showErrorALert("Choose Customer");
                 return;
             }
             
-            if(cbInDocCurrencyName.getSelectionModel().getSelectedItem().isEmpty()){
+            if(cbInDocCurrencyName.getSelectionModel().getSelectedItem() == null){
                 AlertMaker.showErrorALert("Choose Currency");
                 return;
             }
@@ -672,18 +695,256 @@ public class CustomersController implements Initializable {
 
     @FXML
     private void saveOutgoingDocument(ActionEvent event) {
+        try {
+            // validation
+            if(txtOutDocDate.getValue() == null) {
+                AlertMaker.showErrorALert("Choose Date");
+                return;
+            }
+            
+            if(cbOutDocCustomerName.getSelectionModel().getSelectedItem() == null){
+                AlertMaker.showErrorALert("Choose Customer");
+                return;
+            }
+            
+            if(cbOutDocCurrencyName.getSelectionModel().getSelectedItem() == null){
+                AlertMaker.showErrorALert("Choose Currency");
+                return;
+            }
+            
+            if(txtOutDocValue.getText().isEmpty()) {
+                AlertMaker.showErrorALert("Enter Document Value");
+                return;
+            }
+            
+            if(Double.valueOf(txtOutDocValue.getText()) <= 0) {
+                AlertMaker.showErrorALert("Document Value Must Be > 0");
+                return;
+            }
+            
+            LocalDate localDate = txtOutDocDate.getValue();
+            
+            String date = dateFormat.format(Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            String customerName = cbOutDocCustomerName.getSelectionModel().getSelectedItem();
+            String currencyName = cbOutDocCurrencyName.getSelectionModel().getSelectedItem();
+            double value = Double.valueOf(txtOutDocValue.getText());
+            String comment = txtOutDocComment.getText();
+            
+            HashMap<String, Integer> customersMap = customerRepo.getCustomerMap();
+            HashMap<String, Integer> currencysMap = currencyRepo.getCurrencyMap();
+            
+            int customerId = customersMap.get(customerName);
+            int currencyId = currencysMap.get(currencyName);
+            
+            OutgoingDocument doc = OutgoingDocument.builder()
+                    .date(date)
+                    .customerId(customerId)
+                    .currencyId(currencyId)
+                    .value(value)
+                    .comment(comment)
+                    .build();
+            
+            long generatedKey = outDocRepo.save(doc);
+            
+            AccountMovement accountMovement = AccountMovement.builder()
+                        .date(date)
+                        .customerId(customerId)
+                        .currencyId(currencyId)
+                        .incomingDocumentId(0)
+                        .outgoingDocumentId(generatedKey)
+                        .incomingValue(0)
+                        .outgoingValue(value)
+                        .comment(comment)
+                        .build();
+            
+            if(generatedKey > 0) {
+                accountMovementRepo.save(accountMovement);
+                lbOutDocStatus.setText("Document saved with id : " + generatedKey);
+                NotificationMaker.showInformation("Document saved with id : " + generatedKey);
+                clearOutDocFields();
+                fillOutDocTable();
+            }
+                    
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertMaker.showErrorALert(e.toString());
+        }
     }
 
     @FXML
     private void updateOutgoingDocument(ActionEvent event) {
+        try {
+            // validation
+            if(txtOutDocDate.getValue() == null) {
+                AlertMaker.showErrorALert("Choose Date");
+                return;
+            }
+            
+            if(cbOutDocCustomerName.getSelectionModel().getSelectedItem() == null){
+                AlertMaker.showErrorALert("Choose Customer");
+                return;
+            }
+            
+            if(cbOutDocCurrencyName.getSelectionModel().getSelectedItem() == null){
+                AlertMaker.showErrorALert("Choose Currency");
+                return;
+            }
+            
+            if(txtOutDocValue.getText().isEmpty()) {
+                AlertMaker.showErrorALert("Enter Document Value");
+                return;
+            }
+            
+            if(Double.valueOf(txtOutDocValue.getText()) <= 0) {
+                AlertMaker.showErrorALert("Document Value Must Be > 0");
+                return;
+            }
+            
+            LocalDate localDate = txtOutDocDate.getValue();
+            
+            String date = dateFormat.format(Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            String customerName = cbOutDocCustomerName.getSelectionModel().getSelectedItem();
+            String currencyName = cbOutDocCurrencyName.getSelectionModel().getSelectedItem();
+            double value = Double.valueOf(txtOutDocValue.getText());
+            String comment = txtOutDocComment.getText();
+            
+            HashMap<String, Integer> customersMap = customerRepo.getCustomerMap();
+            HashMap<String, Integer> currencysMap = currencyRepo.getCurrencyMap();
+            
+            int customerId = customersMap.get(customerName);
+            int currencyId = currencysMap.get(currencyName);
+            
+            OutgoingDocument oldDoc = tbOutDoc.getSelectionModel().getSelectedItem();
+            
+            if(oldDoc == null) {
+                AlertMaker.showErrorALert("Choose Document First");
+                return;
+            }
+            
+            OutgoingDocument doc = OutgoingDocument.builder()
+                    .id(oldDoc.getId())
+                    .date(date)
+                    .customerId(customerId)
+                    .currencyId(currencyId)
+                    .value(value)
+                    .comment(comment)
+                    .build();
+
+            
+            Optional<ButtonType> response = AlertMaker.showConfirmationAlert("update Document with id : "+ oldDoc.getId() + " ?");
+            
+            if(!(response.get() == ButtonType.OK)) return;
+
+            AccountMovement accountMovement = AccountMovement.builder()
+                        .date(date)
+                        .customerId(customerId)
+                        .currencyId(currencyId)
+                        .incomingDocumentId(0)
+                        .outgoingDocumentId(oldDoc.getId())
+                        .incomingValue(0)
+                        .outgoingValue(value)
+                        .comment(comment)
+                        .build();
+            
+            if(outDocRepo.update(doc)) {
+                accountMovementRepo.update(accountMovement);
+                lbOutDocStatus.setText("Document with id : " + oldDoc.getId() + " updated");
+                NotificationMaker.showInformation("Document with id : " + oldDoc.getId() + " updated");
+                clearOutDocFields();
+                fillOutDocTable();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertMaker.showErrorALert(e.toString());
+        }
     }
+    
+    @FXML
+    private void deleteOutgoingDocument(ActionEvent event) {
+        try {
+            OutgoingDocument doc = tbOutDoc.getSelectionModel().getSelectedItem();
+            
+            if(doc == null) {
+                AlertMaker.showErrorALert("Choose Document First");
+                return;
+            }
+            
+            Optional<ButtonType> response = AlertMaker.showConfirmationAlert("delete Document with id : "+ doc.getId() + " ?");
+            
+            if(!(response.get() == ButtonType.OK)) return;
+            
+            if(outDocRepo.delete(doc.getId())) {
+                lbOutDocStatus.setText("Document with id : " + doc.getId() + " deleted");
+                NotificationMaker.showInformation("Document with id : " + doc.getId() + " deleted");
+                fillOutDocTable();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertMaker.showErrorALert(e.toString());
+        }
+    } 
 
     @FXML
     private void showCustomerReportPerCurrency(ActionEvent event) {
+        try {
+
+            
+            HashMap customersMap = customerRepo.getCustomerMap();
+            HashMap currencyMap = currencyRepo.getCurrencyMap();
+            
+            String customerName = cbReportCustomerName.getSelectionModel().getSelectedItem();
+            String currencyName = cbReportCurrencyName.getSelectionModel().getSelectedItem();
+            
+            int customerId = (int) customersMap.get(customerName);
+            int currencyId = (int) currencyMap.get(currencyName);
+            
+            
+            
+            String reportName = Constants.REPORTS_PATH +"customerAccountByCurrencyName.jasper";
+            
+
+            HashMap map = new HashMap();
+            map.put("customerName", customerName);
+            map.put("currencyName", currencyName);
+            
+            ArrayList<AccountMovement> list = accountMovementRepo.findByCustomerIdAndCurrencyId(customerId, currencyId);
+            
+            double balance = 0.00;
+            
+            for (AccountMovement accountMovement : list) {
+                double b = accountMovement.getOutgoingValue() - accountMovement.getIncomingValue();
+                balance = balance + b;
+                accountMovement.setBalance(balance);
+            }
+            
+            String sBalance = numberFormater.format(balance);
+            map.put("balance", sBalance);
+            
+            InputStream report;
+            report = getClass().getResourceAsStream(reportName);
+            
+            JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(list);
+            
+            JasperPrint jPrint = JasperFillManager.fillReport(report, map, ds);
+            
+            JasperViewer viewer = new JasperViewer(jPrint);
+            JasperViewer.viewReport(jPrint, false);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertMaker.showErrorALert(e.toString());
+        }
     }
 
     @FXML
     private void showCustomerTotalReport(ActionEvent event) {
+        try {
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertMaker.showErrorALert(e.toString());
+        }
     }
 
     private void setAllCbsCustomerName() {
@@ -765,7 +1026,7 @@ public class CustomersController implements Initializable {
             });
             ObservableList ob = FXCollections.observableArrayList(list);
             
-            colInDocId.setCellValueFactory(new PropertyValueFactory<IncomingDocument, Integer>("id"));
+            colInDocId.setCellValueFactory(new PropertyValueFactory<IncomingDocument, Long>("id"));
             colInDocDate.setCellValueFactory(new PropertyValueFactory<IncomingDocument, String>("date"));
             colInDocCustomerName.setCellValueFactory(new PropertyValueFactory<IncomingDocument, String>("customerName"));
             colInDocCurrencyName.setCellValueFactory(new PropertyValueFactory<IncomingDocument, String>("currencyName"));
@@ -784,7 +1045,7 @@ public class CustomersController implements Initializable {
         try {
             txtInDocComment.clear();
             txtInDocDate.setValue(LocalDate.now());
-            txtInDocValue.clear();
+            txtInDocValue.setText("0.00");
         } catch (Exception e) {
             e.printStackTrace();
             AlertMaker.showErrorALert(e.toString());
@@ -836,6 +1097,41 @@ public class CustomersController implements Initializable {
                 doc.setCustomerName(customerRepo.findById(doc.getCustomerId()).getName());
             });
             ObservableList ob = FXCollections.observableArrayList(list);
+            
+            tbOutDoc.setItems(ob);
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertMaker.showErrorALert(e.toString());
+        }
+    }
+
+    private void clearOutDocFields() {
+        try {
+            txtOutDocComment.clear();
+            txtOutDocDate.setValue(LocalDate.now());
+            txtOutDocValue.setText("0.00");
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertMaker.showErrorALert(e.toString());
+        }
+    }
+
+    private void fillOutDocTable() {
+        try {
+            ArrayList<OutgoingDocument> list = outDocRepo.findAllDesc();
+            
+            list.forEach(doc -> {
+                doc.setCurrencyName(currencyRepo.findById(doc.getCurrencyId()).getName());
+                doc.setCustomerName(customerRepo.findById(doc.getCustomerId()).getName());
+            });
+            ObservableList ob = FXCollections.observableArrayList(list);
+            
+            colOutDocId.setCellValueFactory(new PropertyValueFactory<OutgoingDocument, Long>("id"));
+            colOutDocDate.setCellValueFactory(new PropertyValueFactory<OutgoingDocument, String>("date"));
+            colOutDocCustomerName.setCellValueFactory(new PropertyValueFactory<OutgoingDocument, String>("customerName"));
+            colOutDocCurrencyName.setCellValueFactory(new PropertyValueFactory<OutgoingDocument, String>("currencyName"));
+            colOutDocValue.setCellValueFactory(new PropertyValueFactory<OutgoingDocument, Double>("value"));
+            colOutDocComment.setCellValueFactory(new PropertyValueFactory<OutgoingDocument, String>("comment"));
             
             tbOutDoc.setItems(ob);
         } catch (Exception e) {

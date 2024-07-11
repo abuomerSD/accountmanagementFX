@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.UUID;
+import java.util.Vector;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -202,6 +203,22 @@ public class SalesInvoicesController implements Initializable {
                     e.printStackTrace();
                     AlertMaker.showErrorALert(e.toString());
                 }
+            }
+            
+        });
+        
+        cbCustomerSearch.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                filterInvoicesListByCnameAndItype();
+            }
+            
+        });
+        
+        cbInvoiceTypeSearch.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                filterInvoicesListByCnameAndItype();
             }
             
         });
@@ -1364,6 +1381,121 @@ public class SalesInvoicesController implements Initializable {
             e.printStackTrace();
             AlertMaker.showErrorALert(e.toString());
         }
+    }
+
+    @FXML
+    private void filterInvoicesListById(KeyEvent event) {
+        String id = txtInvoiceIdSearch.getText();
+        filterInvoicesListById(id);
+    }
+
+    private void filterInvoicesListById(String id) {
+        try{
+            
+            
+            ArrayList<SalesInvoiceHeader> list = headerRepo.findAllById(id);
+            ObservableList<SalesInvoiceHeader> ob = FXCollections.observableArrayList(list);
+            
+            for (SalesInvoiceHeader header : ob) {
+                header.setCustomerName(customerRepo.findById(header.getCustomerId()).getName());
+                if(header.isIsFileType()) {
+                    header.setInvoiceType("From File");
+                } else {
+                    header.setInvoiceType("Normal Invoice");
+                }
+            }
+            
+            colIdIL.setCellValueFactory(new PropertyValueFactory<>("id"));
+            colDateIL.setCellValueFactory(new PropertyValueFactory<>("date"));
+            colCustomerNameIL.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+            colCommentIL.setCellValueFactory(new PropertyValueFactory<>("comment"));
+            colTaxIL.setCellValueFactory(new PropertyValueFactory<>("tax"));
+            colDiscountIL.setCellValueFactory(new PropertyValueFactory<>("discount"));
+            colTotalIL.setCellValueFactory(new PropertyValueFactory<>("total"));
+            colInvoiceTypeIL.setCellValueFactory(new PropertyValueFactory<>("invoiceType"));
+            colFilePathIL.setCellValueFactory(new PropertyValueFactory<>("filePath"));
+            
+            tbInvoicesList.setItems(ob);
+        } catch(Exception e) {
+            e.printStackTrace();
+            AlertMaker.showErrorALert(e.toString());
+        }
+    }
+    
+    private void filterInvoicesListByCnameAndItype() {
+        try {
+            String customerName = cbCustomerSearch.getSelectionModel().getSelectedItem();
+            String invoiceType = cbInvoiceTypeSearch.getSelectionModel().getSelectedItem();
+            
+            if(customerName == null ) {
+                customerName = "";
+                
+            }
+            
+            if(invoiceType == null ) {
+                invoiceType = "";
+                
+            }
+            
+            HashMap customersMap = getCustomerHashMap();
+            
+            int customerId = 0 ;
+            
+            if(!customerName.equals("")) {
+                customerId = (int) customersMap.get(customerName);
+            }
+            
+            String cusId = String.valueOf(customerId);
+            
+            if(customerId == 0) {
+                cusId = "";
+            }
+            
+            String isFileType = "0" ;
+            
+            if(invoiceType.equals("From File")) {
+                isFileType = "1";
+            } else {
+                isFileType = "0";
+            }
+            
+            
+            
+            ArrayList<SalesInvoiceHeader> list = headerRepo.findAllBySearchWords(cusId, isFileType);
+            ObservableList<SalesInvoiceHeader> ob = FXCollections.observableArrayList(list);
+            
+            
+            for (SalesInvoiceHeader header : ob) {
+                header.setCustomerName(customerRepo.findById(header.getCustomerId()).getName());
+                if(header.isIsFileType()) {
+                    header.setInvoiceType("From File");
+                } else {
+                    header.setInvoiceType("Normal Invoice");
+                }
+            }
+            
+            colIdIL.setCellValueFactory(new PropertyValueFactory<>("id"));
+            colDateIL.setCellValueFactory(new PropertyValueFactory<>("date"));
+            colCustomerNameIL.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+            colCommentIL.setCellValueFactory(new PropertyValueFactory<>("comment"));
+            colTaxIL.setCellValueFactory(new PropertyValueFactory<>("tax"));
+            colDiscountIL.setCellValueFactory(new PropertyValueFactory<>("discount"));
+            colTotalIL.setCellValueFactory(new PropertyValueFactory<>("total"));
+            colInvoiceTypeIL.setCellValueFactory(new PropertyValueFactory<>("invoiceType"));
+            colFilePathIL.setCellValueFactory(new PropertyValueFactory<>("filePath"));
+            
+            tbInvoicesList.setItems(ob);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertMaker.showErrorALert(e.toString());
+        }
+        
+    }
+
+    @FXML
+    private void resetInvoicesList(ActionEvent event) {
+        fillSalesInvoicesTable();
     }
     
 

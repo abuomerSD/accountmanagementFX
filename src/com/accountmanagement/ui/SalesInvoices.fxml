@@ -169,7 +169,7 @@
                                              <children>
                                                 <HBox prefHeight="450.0" prefWidth="650.0">
                                                    <children>
-                                                      <TableView fx:id="tbCustomer" prefHeight="450.0" prefWidth="650.0">
+                                                      <TableView fx:id="tbCustomer" editable="true" prefHeight="450.0" prefWidth="650.0" tableMenuButtonVisible="true">
                                                          <columns>
                                                             <TableColumn fx:id="colCustomerId" prefWidth="75.0" text="ID" />
                                                             <TableColumn fx:id="colCustomerName" prefWidth="324.0" text="Customer Name" />
@@ -558,7 +558,7 @@
                                                 <Font name="Arial Bold" size="14.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="txtInvoiceIdSearch" prefHeight="40.0" prefWidth="161.0" promptText="Invoice ID" styleClass="txt-rounded-background">
+                                          <TextField fx:id="txtInvoiceIdSearch" onKeyReleased="#filterInvoicesListById" prefHeight="40.0" prefWidth="161.0" promptText="Invoice ID" styleClass="txt-rounded-background">
                                              <font>
                                                 <Font name="Arial Bold" size="14.0" />
                                              </font>
@@ -586,7 +586,7 @@
                                                 <Insets left="5.0" />
                                              </HBox.margin>
                                           </ComboBox>
-                                          <Button fx:id="resetInvoicesListTable" mnemonicParsing="false" prefHeight="43.0" prefWidth="83.0" styleClass="btn-update">
+                                          <Button fx:id="resetInvoicesListTable" mnemonicParsing="false" onAction="#resetInvoicesList" prefHeight="43.0" prefWidth="83.0" styleClass="btn-update">
                                              <graphic>
                                                 <FontAwesomeIcon iconName="UNDO" size="30" styleClass="icon" />
                                              </graphic>
@@ -601,7 +601,7 @@
                                     </HBox>
                                     <HBox prefHeight="380.0" prefWidth="1070.0" styleClass="hbox-bordered">
                                        <children>
-                                          <TableView fx:id="tbInvoicesList" prefHeight="366.0" prefWidth="1047.0">
+                                          <TableView fx:id="tbInvoicesList" editable="true" prefHeight="366.0" prefWidth="1047.0" tableMenuButtonVisible="true">
                                             <columns>
                                               <TableColumn fx:id="colIdIL" prefWidth="75.0" text="ID" />
                                               <TableColumn fx:id="colDateIL" prefWidth="106.0" text="Date" />

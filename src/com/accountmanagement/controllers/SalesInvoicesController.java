@@ -1212,6 +1212,7 @@ public class SalesInvoicesController implements Initializable {
             btnPrintInvoice.setDisable(true);
             cbCustomerName.getSelectionModel().selectFirst();
             isUpdateInvoice = false;
+            productObList.clear();
             
         } catch(Exception e) {
             e.printStackTrace();

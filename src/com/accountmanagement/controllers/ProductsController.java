@@ -302,8 +302,8 @@ public class ProductsController implements Initializable {
             
             if(response.get() == ButtonType.OK) {
                 if(productRepo.update(product)) {
-                    lbStatus.setText(product.getSerial() + " Updated");
-                    NotificationMaker.showInformation(product.getSerial() + " Updated");
+                    lbStatus.setText(oldProduct.getSerial() + " Updated");
+                    NotificationMaker.showInformation(oldProduct.getSerial() + " Updated");
                     settbProductsData();
                     settbProductsPLData();
                     clearTextFields();

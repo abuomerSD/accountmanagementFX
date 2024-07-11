@@ -2,9 +2,12 @@
 package com.accountmanagement.controllers;
 
 import com.accountmanagement.database.DatabaseTablesCreator;
+import com.accountmanagement.models.AccountMovement;
+import com.accountmanagement.repositories.accountmovement.AccountMovementSqliteRepository;
 import com.accountmanagement.utils.AlertMaker;
 import com.accountmanagement.utils.Constants;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,6 +18,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javax.swing.JOptionPane;
 
 public class LoginController implements Initializable {
 
@@ -53,6 +57,14 @@ public class LoginController implements Initializable {
                 // create Database Tables 
                 DatabaseTablesCreator.createDbTables();
 
+
+                // check if the app activated
+            
+                if(!isActivated()){
+                 AlertMaker.showMessageAlert("Please Update the System");
+                    return;
+                } 
+
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/accountmanagement/ui/Home.fxml"));
                 Parent root = loader.load();
                 Scene scene = new Scene(root);
@@ -90,6 +102,26 @@ public class LoginController implements Initializable {
         }
     }
     
-    
+    private boolean isActivated() {
+        
+        boolean activated = true;
+        
+        try {
+            AccountMovementSqliteRepository repo = new AccountMovementSqliteRepository();
+            ArrayList<AccountMovement> list = repo.findAll();
+            
+            if(activated == false){
+                
+                if(list.size() > 100) {                    
+                    return activated;
+                }
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertMaker.showErrorALert(e.toString());
+        }
+        return true;
+    }
     
 }

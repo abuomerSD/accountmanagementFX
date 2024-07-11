@@ -13,7 +13,7 @@ public class NotificationMaker {
                         .title("Info")
                         .text(text)
                         .darkStyle()
-                        .position(Pos.BOTTOM_RIGHT)
+                        .position(Pos.TOP_RIGHT)
                         .showInformation();
        
             } catch (Exception e) {

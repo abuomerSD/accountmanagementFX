@@ -26,38 +26,13 @@ public class Main  extends Application{
 
     }
     
-    private static boolean isActivated() {
-        
-        boolean activated = true;
-        
-        try {
-            AccountMovementSqliteRepository repo = new AccountMovementSqliteRepository();
-            ArrayList<AccountMovement> list = repo.findAll();
-            
-            if(activated == false){
-                
-                if(list.size() > 100) {                    
-                    return activated;
-                }
-            }
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e);
-        }
-        return true;
-    }
+    
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         try {
             
-            // check if the app activated
             
-            if(!isActivated()){
-                AlertMaker.showMessageAlert("Please Update the System");
-                return;
-            } 
             
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/accountmanagement/ui/Login.fxml"));
             Parent root = loader.load();

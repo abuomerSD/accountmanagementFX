@@ -1,9 +1,8 @@
 package com.accountmanagement.main;
 
-import com.accountmanagement.controllers.HomeController;
-import com.accountmanagement.database.DatabaseTablesCreator;
 import com.accountmanagement.models.AccountMovement;
 import com.accountmanagement.repositories.accountmovement.AccountMovementSqliteRepository;
+import com.accountmanagement.utils.AlertMaker;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javafx.application.Application;
@@ -52,36 +51,26 @@ public class Main  extends Application{
     @Override
     public void start(Stage primaryStage) throws Exception {
         try {
-            // create Database Tables 
-            DatabaseTablesCreator.createDbTables();
-            
-            // flatlaf look and feel
-            
-//            FlatLightLaf.setup();
             
             // check if the app activated
             
             if(!isActivated()){
-                JOptionPane.showMessageDialog(null, "يرجى تحديث النظام");
+                AlertMaker.showMessageAlert("Please Update the System");
                 return;
             } 
             
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/accountmanagement/ui/Home.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/accountmanagement/ui/Login.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
-            primaryStage.setTitle("Account Management");
-            
-            HomeController controller = loader.getController();
-            
-            primaryStage.setOnHidden(e -> controller.shutDown());
-            
+            primaryStage.setTitle("Login");         
             
             primaryStage.show();
                      
                         
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
+            AlertMaker.showErrorALert(e.toString());
+            e.printStackTrace();
         }
     }
    

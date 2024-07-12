@@ -17,21 +17,6 @@ A JavaFX Application For Managing Products and Account .
 
 **Notifications:** ControlsFX Notifications.
 
-## Screenshots
-
-![App Screenshot](/imgs/1.png)
-![App Screenshot](/imgs/2.png)
-![App Screenshot](/imgs/3.png)
-![App Screenshot](/imgs/4.png)
-![App Screenshot](/imgs/5.png)
-![App Screenshot](/imgs/6.png)
-![App Screenshot](/imgs/7.png)
-![App Screenshot](/imgs/8.png)
-![App Screenshot](/imgs/9.png)
-![App Screenshot](/imgs/10.png)
-![App Screenshot](/imgs/11.png)
-
-
 ## Features
 
 Program Advantages :
@@ -63,3 +48,17 @@ Program Advantages :
 - Adding, modifying and deleting exchange vouchers.
 
 - View and print the customer’s account statement (analytical or total).
+
+## Screenshots
+
+![App Screenshot](/imgs/1.png)
+![App Screenshot](/imgs/2.png)
+![App Screenshot](/imgs/3.png)
+![App Screenshot](/imgs/4.png)
+![App Screenshot](/imgs/5.png)
+![App Screenshot](/imgs/6.png)
+![App Screenshot](/imgs/7.png)
+![App Screenshot](/imgs/8.png)
+![App Screenshot](/imgs/9.png)
+![App Screenshot](/imgs/10.png)
+![App Screenshot](/imgs/11.png)

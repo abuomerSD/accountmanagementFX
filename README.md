@@ -17,6 +17,10 @@ A JavaFX Application For Managing Products and Account .
 
 **Notifications:** ControlsFX Notifications.
 
+## Dependencies
+
+[download Libs](https://drive.google.com/file/d/1BJYxfWCmf4ut4DkJTU5tFK3ivI2RFwS-/view?usp=drive_link)
+
 ## Features
 
 Program Advantages :

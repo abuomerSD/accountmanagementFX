@@ -4,14 +4,18 @@ package com.accountmanagement.controllers;
 import com.accountmanagement.models.Product;
 import com.accountmanagement.repositories.product.ProductSqliteRepository;
 import com.accountmanagement.utils.AlertMaker;
+import com.accountmanagement.utils.Constants;
 import com.accountmanagement.utils.DateFormater;
 import com.accountmanagement.utils.NotificationMaker;
+import java.io.InputStream;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -31,6 +35,11 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
+import net.sf.jasperreports.engine.JREmptyDataSource;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.view.JasperViewer;
 
 
 public class ProductsController implements Initializable {
@@ -433,7 +442,77 @@ public class ProductsController implements Initializable {
             AlertMaker.showErrorALert(e.toString());
         }
     }
+
+    @FXML
+        private void printProductDetails(ActionEvent event) {
+        try {
+            
+            Product product = tbProducts.getSelectionModel().getSelectedItem();
+            
+            if(product == null) {
+                AlertMaker.showMessageAlert("Choose Product First");
+                return;
+            }
+            HashMap hashMap = new HashMap();
+            hashMap.put("serial", product.getSerial());
+            hashMap.put("buyerName", product.getBuyerName());
+            hashMap.put("buyerPhone", product.getBuyerPhone());
+            hashMap.put("buyerEmail", product.getBuyerEmail());
+            hashMap.put("password", product.getPassword());
+            hashMap.put("subscribtionDate", product.getSubscribtionDate());
+            hashMap.put("subscribtionValue", product.getSubscribtionValue());
+            
+            showProductCard(hashMap);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertMaker.showErrorALert(e.toString());
+        }
+    }
+
+    @FXML
+    private void printProductDetailsFromProductList(ActionEvent event) {
+        try {
+            
+            Product product = tbProductsPL.getSelectionModel().getSelectedItem();
+            
+            if(product == null) {
+                AlertMaker.showMessageAlert("Choose Product First");
+                return;
+            }
+            HashMap hashMap = new HashMap();
+            hashMap.put("serial", product.getSerial());
+            hashMap.put("buyerName", product.getBuyerName());
+            hashMap.put("buyerPhone", product.getBuyerPhone());
+            hashMap.put("buyerEmail", product.getBuyerEmail());
+            hashMap.put("password", product.getPassword());
+            hashMap.put("subscribtionDate", product.getSubscribtionDate());
+            hashMap.put("subscribtionValue", product.getSubscribtionValue());
+            
+            showProductCard(hashMap);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertMaker.showErrorALert(e.toString());
+        }
+    }
     
+    private void showProductCard(HashMap map) {
+        try {
+            String reportName = Constants.REPORTS_PATH +"productCard.jasper";
+            InputStream report;
+            report = getClass().getResourceAsStream(reportName);
+            ArrayList list = new ArrayList();     
+            
+            JasperPrint jPrint = JasperFillManager.fillReport(report, map, new JREmptyDataSource(1));
+            
+            JasperViewer.viewReport(jPrint, false);
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertMaker.showErrorALert(e.toString());
+        }
+        
+    }
     
     
 }
